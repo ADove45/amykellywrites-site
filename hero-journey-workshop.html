@@ -94,17 +94,8 @@ footer a{color:#D6A23F}
 <h2>Get free access</h2>
 <p>Enter your name and email below. I'll send the link to the Writing Studio straight to your inbox.</p>
 
-<!-- =============================================
-     GETRESPONSE FORM
-     Replace the placeholder form below with your
-     GetResponse embed code. Keep the wrapping div
-     and the thank-you div beneath it.
-     ============================================= -->
-<form class="signup-form" id="workshopForm" onsubmit="handleSubmit(event)">
-<input type="text" name="name" placeholder="Your first name" required>
-<input type="email" name="email" placeholder="Your email address" required>
-<button type="submit">Send me the link</button>
-</form>
+<getresponse-form form-id="12fe0d39-d16b-4651-884d-a364563de159" e="1"></getresponse-form>
+<script src="https://app.getresponse.com/view_webform_v2.js?u=abc123" type="text/javascript"></script>
 <p style="font-size:15px;color:#9A8E80;margin-top:12px">No spam. Unsubscribe anytime.</p>
 </div>
 
@@ -170,27 +161,8 @@ footer a{color:#D6A23F}
 </footer>
 
 <script>
-function handleSubmit(e) {
-  e.preventDefault();
-  /*
-    TEMPORARY placeholder behavior.
-    Once you paste your GetResponse form embed code,
-    remove this entire script block — GetResponse handles
-    the submission and redirect on its own.
-
-    If you use GetResponse's HTML form (not JavaScript embed),
-    set the form's action to your GetResponse form URL and
-    change the onsubmit to point to GetResponse's thank-you page,
-    or use the custom-thank-you option in GetResponse to redirect
-    back here with ?subscribed=true (see below).
-  */
-  document.getElementById('signupBlock').style.display = 'none';
-  document.getElementById('thankYou').classList.add('show');
-}
-
-// If returning from GetResponse with ?subscribed=true
-if (window.location.search.includes('subscribed=true')) {
-  document.getElementById('signupBlock').style.display = 'none';
+if(location.search.includes('subscribed=true')){
+  document.getElementById('signupBlock').style.display='none';
   document.getElementById('thankYou').classList.add('show');
 }
 </script>
