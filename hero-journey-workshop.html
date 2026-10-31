@@ -5,15 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Hero's Journey Writing Workshop — Amy Kelly Writes</title>
 <meta name="description" content="A free interactive writing studio that walks you through every stage of the Hero's Journey — from the ordinary world to the return with the elixir. Sign up to get instant access.">
-<!-- GetResponse Web Connect -->
-<script type="text/javascript">
-(function(m, o, n, t, e, r, _){
-    m['__GetResponseAnalyticsObject'] = e;m[e] = m[e] || function() {(m[e].q = m[e].q || []).push(arguments)};
-    r = o.createElement(n);_ = o.getElementsByTagName(n)[0];r.async = 1;r.src = t;r.setAttribute('crossorigin', 'use-credentials');_.parentNode.insertBefore(r, _);
-})(window, document, 'script', 'https://an.gr-wcon.com/script/b6a4b98b-7dce-4b6a-9914-6aac4f1e3868/ga.js', 'GrTracking');
-</script>
-<script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=b6a4b98b-7dce-4b6a-9914-6aac4f1e3868" async></script>
-<!-- End GetResponse Web Connect -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&amp;family=Work+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <style>
@@ -103,9 +94,11 @@ footer a{color:#D6A23F}
 <h2>Get free access</h2>
 <p>Enter your name and email below. I'll send the link to the Writing Studio straight to your inbox.</p>
 
-<div id="grForm">
-<getresponse-form form-id="12fe0d39-d16b-4651-884d-a364563de159" e="1"></getresponse-form>
-</div>
+<form class="signup-form" id="workshopForm" onsubmit="handleSubmit(event)">
+<input type="text" name="name" placeholder="Your first name" required>
+<input type="email" name="email" placeholder="Your email address" required>
+<button type="submit">Send me the link</button>
+</form>
 <p style="font-size:15px;color:#9A8E80;margin-top:12px">No spam. Unsubscribe anytime.</p>
 </div>
 
@@ -171,6 +164,11 @@ footer a{color:#D6A23F}
 </footer>
 
 <script>
+function handleSubmit(e) {
+  e.preventDefault();
+  document.getElementById('signupBlock').style.display = 'none';
+  document.getElementById('thankYou').classList.add('show');
+}
 if(location.search.includes('subscribed=true')){
   document.getElementById('signupBlock').style.display='none';
   document.getElementById('thankYou').classList.add('show');
