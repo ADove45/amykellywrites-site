@@ -19,6 +19,7 @@ h1{font-variant:small-caps;letter-spacing:.12em;text-align:center;color:var(--go
 .log{color:#9fb3d1;font-style:italic;border-left:2px solid #33466f;padding-left:12px}
 .art{width:100%;max-height:60vh;object-fit:contain;background:#000;border-radius:10px;border:1px solid #2a3a5c;margin:0 0 16px;display:block}
 .cover{max-width:340px;margin:0 auto 18px;box-shadow:0 0 40px #e8a53a33}
+.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:180px;margin:0 0 16px;padding:18px;border:2px dashed #4a5f8f;border-radius:10px;background:repeating-linear-gradient(45deg,#0d1a33,#0d1a33 12px,#101f3d 12px,#101f3d 24px);color:#9fb3d1;font-size:.85rem}.ph b{color:var(--gold);letter-spacing:.15em;font-size:.75rem}.ph code{color:var(--blue)}
 .eq{text-align:center;font-size:1.3em;background:#0d1a33;border:1px solid #2a3a5c;border-radius:8px;padding:10px;margin:14px 0}
 .say{margin-left:1em}
 button{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:#101a33;color:var(--ink);border:1px solid #33466f;border-radius:8px;font:inherit;font-size:.95em;cursor:pointer}
@@ -38,7 +39,7 @@ button:hover{border-color:var(--gold);background:#16234a}
 </main>
 <script>
 // Interactive adaptation of "The Daughter Who Borrowed Tomorrow", Episode 1 (Julia Dove / Rasheedah Prioleau).
-const S={mom:25,vial:100,lies:0,years:0,f:{},scene:'class',pend:''};
+const S={mom:25,vial:100,lies:0,years:0,f:{},scene:'grade',pend:''};
 const $=id=>document.getElementById(id);
 const log=m=>S.pend+=`<p class="log">${m}</p>`;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -46,29 +47,117 @@ const dose=d=>{ // d = number of drops
   if(!d)return; S.vial=clamp(S.vial-d*1.6,0,100); S.mom=clamp(S.mom+d*2.4,0,100);
   S.f.drops=(S.f.drops||0)+d;};
 
+const ART={
+grade:'Title / cover art (cover.jpg is used on this screen)',
+class:'Nova at her desk, pencil moving, drone outside the cracked window',
+solved:'Nova at the board, stylus in hand, class watching',
+helios:'Mr. Turing at his desk, the Helios Academy crest on a letter',
+home1:'Mamma at the sink with a red-spotted dish towel, Nova in the doorway',
+night1:'Nova in bed in the dark, listening through the thin wall',
+exam:'Helios testing center lobby: glass building, polished students, Room 347 placard',
+examq:'Nova at the exam desk wearing the silver neural headset, tablet glowing',
+exam2:'The mirror room: Nova floating, her double pressing a palm to the barrier',
+exam3:'Smoking headset, blank tablet, Dr. Knox and Kai Thorne leaning over',
+exam4:'Nova on a night bus, hand pressed to her eyes',
+diner:'Mel\'s Diner interior: vinyl booths, Mel at the register, Nova with the coffee pot',
+diner2:'Kitchen table: cold rigatoni, the Helios letter, Mamma holding Nova\'s raw palm',
+hospital:'Mid-District General ER waiting room, Nova alone under harsh light',
+eliza:'Eliza and Nova whispering in the ER, Eliza gripping her hands',
+darryl:'Darryl\'s cart: backward clocks, starlight hourglasses, drones avoiding the stall',
+darryl2:'Darryl sliding the father\'s leather journal across the cart, the scratch visible',
+darryl3:'Journal open, faint equations glowing in the handwriting',
+darryl4:'Darryl placing the glowing token with spiraling equations in Nova\'s palm',
+tunnel:'Abandoned subway platform, green light, moving graffiti equations',
+chamber:'Circular chamber: token in the floor, floor becoming a spiral clock face, golden arch',
+plaza:'The Market plaza: giant orrery of golden spheres, floating formulas',
+booth:'Premium booth: soft light, assessor behind a sleek desk, 3D timeline tree projected',
+booth2:'Glowing contract on the desk, Nova\'s hand on the stylus, Eli silhouetted in the doorway',
+knox:'Eli in the booth doorway, eyes still, the assessor smiling',
+knox2:'Glass-walled office above the Market floor, radial rings of booths below',
+knox3:'Eli and Nova at the glass, Kai Thorne visible in the plaza below',
+knox4:'Nova eyes closed, thumbs pressed to the glass',
+vial:'Crystal vial of liquid gold held in Eli\'s hand',
+elysium:'Elysium Reid in the doorway: platinum hair, cream dress, champagne flute',
+home2:'Mamma at the stove, hospital band on her wrist, Nova uncapping the vial',
+home3:'Nova on the kitchen floor against the cabinet, vial clutched to her chest',
+home4:'Mamma at the counter at dawn, hair up, humming, steady hands',
+park:'Mamma and Nova on a park bench, sunlight on her face',
+dosing:'Three drops of gold falling into a glass of water',
+night2:'Nova lying on top of the covers, streetlight orange on the wall, drones silent',
+future:'Older Nova at the foot of the bed in a dark suit, holding the glowing vial'
+};
+function artHTML(id,name){
+ const file=name||id;
+ return `<img class="art" src="img/${file}.jpg" alt="" onerror="this.outerHTML='<div class=&quot;ph&quot;><b>IMAGE PLACEHOLDER</b><span>${(ART[id]||'Scene art').replace(/'/g,'&#39;').replace(/"/g,'&quot;')}</span><span>Save as <code>img/${file}.jpg</code></span></div>'">`}
 const sc={};
 
 // ---------- CHAPTER 1 ----------
-sc.class={img:()=>S.f.ritual?'knuckles':(S.f.board?'board':'title'),ch:'Chapter 1',title:'The Equation of Life',
+
+// ---------- GRADE-LEVEL OPENING ----------
+const BANDS={
+ k2:{name:'Grades K–2',tier:'Helios Seedling Scholarship',
+  board:`<div class="eq">7 + 5 = ?</div>`, opts:['12','11','13','10'], ans:0,
+  hint:'Count up from 7: eight, nine, ten, eleven, twelve. Five steps.',
+  solved:`<p>Twelve. I boxed it neatly. Mr. Turing smiled — numbers don't lie, and neither did that one.</p>`,
+  exam:`A clock loses 2 minutes every hour. After 4 hours, how many minutes has it lost?`, eopts:['8','6','4','10'], eans:0, ehint:'2 + 2 + 2 + 2 = ?'},
+ g35:{name:'Grades 3–5',tier:'Helios Junior Scholars Award',
+  board:`<div class="eq">What is ¾ of 24?</div>`, opts:['18','12','16','20'], ans:0,
+  hint:'Find ¼ of 24 first (24 ÷ 4 = 6), then take three of them.',
+  solved:`<p>Eighteen. Divide by four, then multiply by three. Clean. Simple. Beautiful.</p>`,
+  exam:`A clock loses 3 minutes every hour. After 5 hours, how many minutes has it lost?`, eopts:['15','8','20','12'], eans:0, ehint:'3 × 5.'},
+ g68:{name:'Grades 6–8',tier:'Helios Scholars Merit Award',
+  board:`<div class="eq">Solve for x: 3x + 7 = 25</div>`, opts:['x = 6','x = 8','x = 9','x = 10'], ans:0,
+  hint:'Subtract 7 from both sides, then divide by 3.',
+  solved:`<p>x = 6. Undo the plus, undo the times. Every equation is a lock and every step is a key.</p>`,
+  exam:`The Market's exchange ratio is 4 hours borrowed for every 3 hours repaid. How many hours must you borrow to repay 12?`, eopts:['16','9','15','12'], eans:0, ehint:'4 : 3 = ? : 12. Scale up by 4.'},
+ g910:{name:'Grades 9–10',tier:'Helios Academy Presidential Scholarship',
+  board:`<div class="eq">Solve: x² − 5x + 6 = 0</div>`, opts:['x = 2 or x = 3','x = −2 or x = −3','x = 1 or x = 6','x = 5 or x = 6'], ans:0,
+  hint:'Factor: what two numbers multiply to 6 and add to −5?',
+  solved:`<p>(x − 2)(x − 3) = 0, so x = 2 or 3. Two roots. Two doors. Both open.</p>`,
+  exam:`A debt of 100 hours grows 10% per day. How many hours is owed after 2 days?`, eopts:['121','120','110','100'], eans:0, ehint:'100 × 1.1 × 1.1.'},
+ g1112:{name:'Grades 11–12 / AP',tier:'Helios Academy Full-Ride Founders Scholarship',
+  board:`<div class="eq">y″ + 4y′ + 4y = e<sup>−2x</sup>(3x + 1)</div>`,
+  opts:['y = (C₁ + C₂x)e⁻²ˣ + e⁻²ˣ(x³/2 + x²/2)','y = (C₁ + C₂x)e⁻²ˣ + e⁻²ˣ(3x + 1)','y = C₁e²ˣ + C₂e⁻²ˣ','y = (C₁ + C₂x)e⁻²ˣ + e⁻²ˣ(x³ + x²)'], ans:0,
+  hint:'r² + 4r + 4 = (r + 2)², a repeated root. Substitute y = e⁻²ˣu and the equation collapses to u″ = 3x + 1.',
+  solved:`<p>Substitute y = e<sup>−2x</sup>u and the mess collapses into <em>u″ = 3x + 1</em>. Integrate twice: y = e<sup>−2x</sup>(x³/2 + x²/2 + C₁x + C₂). I boxed it. Clean. Precise. "This is a non-homogeneous, second-order differential equation," I told the room. "Once you spot that, it's not homework anymore. It's poetry."</p>`,
+  exam:`Differentiate: f(x) = x²·e⁻²ˣ. What is f′(x)?`, eopts:['e⁻²ˣ(2x − 2x²)','2x·e⁻²ˣ','e⁻²ˣ(2x + 2x²)','−2x²e⁻²ˣ'], eans:0, ehint:'Product rule: (x²)′e⁻²ˣ + x²(e⁻²ˣ)′.'}
+};
+const shuf=a=>a.map((v,i)=>[v,i]).sort(()=>Math.random()-.5);
+const B=()=>BANDS[S.grade];
+
+sc.grade={ch:'Welcome',title:'Choose Your Level',
+text:()=>`<p>The Daughter Who Borrowed Tomorrow is a story about a girl who sees salvation in math — and about what happens when time itself becomes currency.</p>
+<p>Pick your math level. The questions you'll face are matched to it, and so is the scholarship you're fighting for. Every level gets the full story.</p>`,
+ch_:()=>Object.keys(BANDS).map(k=>({t:BANDS[k].name,do:()=>{S.grade=k},go:'class'}))};
+
+sc.class={img:()=>S.f.ritual?'knuckles':(S.f.board?(S.grade==='g1112'?'board':'class'):'title'),ch:'Chapter 1',title:'The Equation of Life',
 text:()=>`<p>My pencil attacked the page like it had something to prove. Around me, sighs and frantic erasing filled the room—the soundtrack of surrender. But I wasn't surrendering. I was hunting.</p>
-<p>${S.f.ritual?'Left hand, right hand, both thumbs. The knuckles cracked. My pre-math ritual since middle school.':'Mr. Turing\'s equation sprawled across the board like a beautiful dare.'} Through the cracked window, patrol drones made their rounds. Three more than last month. I'd noticed.</p>
-<p>It was the last day of school. Tomorrow was the Helios Academy qualifying exam—my one shot at a scholarship that could change everything for me and Mamma.</p>
-<div class="eq">y″ + 4y′ + 4y = e<sup>−2x</sup>(3x + 1)</div>
-<p>"Five more minutes," Mr. Turing called. Beside me, Marco erased so hard the paper tore.</p>`,
-ch_:[
- {t:'Look at the board',if:()=>!S.f.board,do:()=>{S.f.board=1},go:'class'},
- {t:'Crack my knuckles first',if:()=>!S.f.ritual,do:()=>{S.f.ritual=1},go:'class'},
- {t:'y = (C₁ + C₂x)e⁻²ˣ + e⁻²ˣ(x³/2 + x²/2)',go:'solved'},
- {t:'y = (C₁ + C₂x)e⁻²ˣ + e⁻²ˣ(3x + 1)',do:()=>log('Marco leans over. "That can\'t be right, the forcing term matches the homogeneous solution." He\'s right. A repeated root means the usual guess fails.'),go:'class'},
- {t:'y = C₁e²ˣ + C₂e⁻²ˣ',do:()=>log('That\'s the solution if the roots were different. But r² + 4r + 4 = (r + 2)². One root, repeated.'),go:'class'},
- {t:'y = (C₁ + C₂x)e⁻²ˣ + e⁻²ˣ(x³ + x²)',do:()=>log('Close. Substitute y = e⁻²ˣu and the whole thing collapses to u″ = 3x + 1. Integrate twice — check those fractions.'),go:'class'}]};
+<p>${S.f.ritual?'Left hand, right hand, both thumbs. The knuckles cracked. My pre-math ritual since middle school.':'Mr. Turing\'s question sprawled across the board like a beautiful dare.'} Through the cracked window, patrol drones made their rounds. Three more than last month. I'd noticed.</p>
+<p><strong>Answer the question on the board to continue.</strong></p>${B().board}`,
+ch_:()=>{const q=shuf(B().opts.map((t,i)=>({t,i})));
+ const c=[];
+ if(!S.f.ritual)c.push({t:'Crack my knuckles first',do:()=>{S.f.ritual=1},go:'class'});
+ if(!S.f.board)c.push({t:'Look at the board',do:()=>{S.f.board=1},go:'class'});
+ q.forEach(([o])=>c.push({t:o.t,do:()=>{ if(o.i!==B().ans) log('Not quite. Hint: '+B().hint) },go:o.i===B().ans?'solved':'class'}));
+ return c}};
 
 sc.solved={img:'salvation',ch:'Chapter 1',title:'The Equation of Life',
-text:()=>`<p>Substitute y = e<sup>−2x</sup>u and the mess collapses into <em>u″ = 3x + 1</em>. Integrate twice and it clicks into place: y = e<sup>−2x</sup>(x³/2 + x²/2 + C₁x + C₂). I boxed it. Clean. Precise.</p>
-<p>Only three hands went up. Mine was one of them. "Ms. Quinn. Want to walk us through it?" I took the stylus. "This is a non-homogeneous, second-order differential equation. Once you spot that, it's not homework anymore. It's poetry."</p>
-<p>Mr. Turing watched me with pride—and something that looked like pity. A butterfly beating its wings against glass. Because potential didn't pay rent. Brilliance didn't cure whatever was making Mamma cough at night.</p>
-<p>After the bell he asked me to stay. "Tomorrow is more than a test, Nova. You have raw ability most of them don't. Don't let them make you feel less than. Now go. Show them what East District can do."</p>`,
+text:()=>`${B().solved}
+<p>Only a few hands went up. Mine was one of them. Mr. Turing watched me with pride—and something that looked like pity, like a butterfly beating its wings against glass.</p>
+<p>After the bell he asked me to stay. "${S.grade==='k2'||S.grade==='g35'?'You\'re a natural, Nova.':'Excellent work, as always, Ms. Quinn.'} I've submitted your name for the <strong>Helios Academy qualifying exam</strong>. It's tomorrow."</p>`,
+ch_:[{t:'"The Helios exam?"',go:'helios'}]};
+
+sc.helios={img:'surrender',ch:'Chapter 1',title:'The Equation of Life',
+text:()=>`<p>"The most prestigious school in the city. Their qualifying exam is built for your level: <strong>${B().name}</strong>. Score high enough and you'll earn the <strong>${B().tier}</strong>. It would cover tuition, books, everything."</p>
+<p>My heart kicked against my ribs. A scholarship was the one thing that could change everything for me and Mamma. Mr. Turing's voice dropped. "They've had advantages you haven't, Nova. Preparation you couldn't afford. But you have something most of them don't. Raw ability. Don't let them make you feel less than. You belong anywhere your mind can take you."</p>
+<p>"Now go. Show them what East District can do."</p>`,
 ch_:[{t:'Walk home through the neighborhood',go:'home1'}]};
+
+sc.examq={ch:'Chapter 2',title:'Testing Limits',
+text:()=>`<p>"You may start… now."</p>
+<p>The first question appeared on the tablet. The neural interface tingled against my temples. <strong>${B().tier}</strong> — this was it.</p>
+<div class="eq" style="font-size:1.05em">${B().exam}</div>`,
+ch_:()=>shuf(B().eopts.map((t,i)=>({t,i}))).map(([o])=>({t:o.t,do:()=>{ if(o.i!==B().eans) log('Not quite. Hint: '+B().ehint); else S.f.examCorrect=1 },go:o.i===B().eans?'exam2':'examq'}))};
 
 sc.home1={ch:'Chapter 1',title:'The Equation of Life',
 text:()=>`<p>At Maple and 43rd, Mrs. Genovese swept her tiny square of sidewalk with arthritic hands while a drone hovered overhead. "How's your mama?" she asked, voice dropping. "Tell Mina I've got basil she can come snip."</p>
@@ -96,11 +185,10 @@ text:()=>`<p>The testing center was a sleek glass building in Mid-District. The 
 <p>When his gaze passed over me I felt not butterflies but <em>déjà vu</em>. Like remembering someone I hadn't met yet.</p>`,
 ch_:[
  {t:'Ask Dr. Knox what "advanced evaluation protocols" means',do:()=>{S.f.askedKnox=1;log('"Later," he says smoothly. "Focus on the problems."')},go:'exam'},
- {t:'Put on my game face and begin',go:'exam2'}]};
+ {t:'Put on my game face and begin',go:'examq'}]};
 
 sc.exam2={ch:'Chapter 2',title:'Testing Limits',
-text:()=>`<p>"You may start… now."</p>
-<p>The mathematics section sang. Then something went subtly wrong: the interface's hum deepened, sounds muffled, the air grew cold and misty, and the room began to float. No one else noticed. My voice was gone.</p>
+text:()=>`<p>The mathematics section sang. Then something went subtly wrong: the interface's hum deepened, sounds muffled, the air grew cold and misty, and the room began to float. No one else noticed. My voice was gone.</p>
 <p>Across from me was a mirror of the entire room—and at the desk matching mine sat <em>me</em>. Same face, same hair. She floated up from her chair, glided to the invisible barrier and pressed her palms to it. I pressed mine against hers. Warmth spread through my fingers. Her lips moved—</p>
 <p><strong>CRASH.</strong></p>`,
 ch_:[{t:'Come back to the room',go:'exam3'}]};
@@ -391,14 +479,14 @@ function hud(){
 }
 function render(){
  hud();
- document.querySelector('.cover').style.display=(S.scene==='class'&&!S.f.ritual&&!S.f.board)?'block':'none';
+ document.querySelector('.cover').style.display=(S.scene==='grade')?'block':'none';
  const s=sc[S.scene];
  if(s.auto){S.scene=s.auto();return render()}
  $('chap').textContent=s.ch; $('ctitle').textContent=s.title;
- const im=typeof s.img==='function'?s.img():s.img;
- $('text').innerHTML=(im?`<img class="art" src="img/${im}.jpg" alt="">`:'')+S.pend+s.text(); S.pend='';
+ const im=typeof s.img==='function'?s.img():s.img; s.id=S.scene;
+ $('text').innerHTML=(s.id==='grade'?'':artHTML(S.scene,im))+S.pend+s.text(); S.pend='';
  const c=$('choices'); c.innerHTML='';
- s.ch_.filter(x=>!x.if||x.if()).forEach(x=>{
+ (typeof s.ch_==='function'?s.ch_():s.ch_).filter(x=>!x.if||x.if()).forEach(x=>{
   const b=document.createElement('button'); b.innerHTML=x.t;
   b.onclick=()=>{ if(x.do)x.do(); go(x.go) };
   c.appendChild(b);
