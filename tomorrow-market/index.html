@@ -45,7 +45,7 @@ button:hover{border-color:var(--gold);background:#16234a}
 </main>
 <script>
 // Interactive adaptation of "The Daughter Who Borrowed Tomorrow", Episode 1 (Julia Dove / Rasheedah Prioleau).
-const S={grade:'g78',mom:25,vial:100,lies:0,years:0,f:{},scene:'class',pend:''};
+const S={grade:'g78',mom:25,vial:100,lies:0,years:0,f:{},scene:'grade',pend:''};
 const $=id=>document.getElementById(id);
 const log=m=>S.pend+=`<p class="log">${m}</p>`;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -127,18 +127,17 @@ const BANDS={
 const shuf=a=>a.map((v,i)=>[v,i]).sort(()=>Math.random()-.5);
 const B=()=>BANDS[S.grade];
 
-sc.grade={ch:'Welcome',title:'Choose Your Level',
+sc.grade={art:()=>artHTML('grade','titlecard'),ch:'Welcome',title:'Choose Your Level',
 text:()=>`<p>The Daughter Who Borrowed Tomorrow is a story about a girl who sees salvation in math — and about what happens when time itself becomes currency.</p>
-<p>Pick your math level. The questions you'll face are matched to it, and so is the scholarship you're fighting for. Every level gets the full story.</p>`,
+<p><strong>Choose your math level to begin.</strong> The questions you'll face are matched to it, and so is the scholarship you're fighting for. Every level gets the full story.</p>`,
 ch_:()=>Object.keys(BANDS).map(k=>({t:BANDS[k].name,do:()=>{S.grade=k},go:'class'}))};
 
-sc.class={art:()=>(S.f.ritual?artHTML('class','knuckles'):(S.f.board?roomHTML():artHTML('class','titlecard')+roomHTML())),ch:'Chapter 1',title:'The Equation of Life',
+sc.class={art:()=>(S.f.ritual?artHTML('class','knuckles'):roomHTML()),ch:'Chapter 1',title:'The Equation of Life',
 text:()=>`<p>My pencil attacked the page like it had something to prove. Around me, sighs and frantic erasing filled the room—the soundtrack of surrender. But I wasn't surrendering. I was hunting.</p>
 <p>${S.f.ritual?'Left hand, right hand, both thumbs. The knuckles cracked. My pre-math ritual since middle school.':'Mr. Turing\'s question sprawled across the board like a beautiful dare.'} Through the cracked window, patrol drones made their rounds. Three more than last month. I'd noticed.</p>
 <p><strong>Answer the question on the board to continue.</strong></p>${B().board}`,
 ch_:()=>{const q=shuf(B().opts.map((t,i)=>({t,i})));
  const c=[];
- c.push({t:'⚙ Change my math level ('+B().name+')',do:()=>{},go:'grade'});
  if(!S.f.ritual)c.push({t:'Crack my knuckles first',do:()=>{S.f.ritual=1},go:'class'});
  if(!S.f.board)c.push({t:'Look at the board',do:()=>{S.f.board=1},go:'class'});
  q.forEach(([o])=>c.push({t:o.t,do:()=>{ if(o.i!==B().ans) log('Not quite. Hint: '+B().hint) },go:o.i===B().ans?'solved':'class'}));
@@ -489,7 +488,7 @@ function render(){
  if(s.auto){S.scene=s.auto();return render()}
  $('chap').textContent=s.ch; $('ctitle').textContent=s.title;
  const im=typeof s.img==='function'?s.img():s.img; s.id=S.scene;
- $('text').innerHTML=(s.id==='grade'?'':(s.art?s.art():artHTML(S.scene,im)))+S.pend+s.text(); S.pend='';
+ $('text').innerHTML=(s.art?s.art():artHTML(S.scene,im))+S.pend+s.text(); S.pend='';
  const c=$('choices'); c.innerHTML='';
  (typeof s.ch_==='function'?s.ch_():s.ch_).filter(x=>!x.if||x.if()).forEach(x=>{
   const b=document.createElement('button'); b.innerHTML=x.t;
