@@ -21,6 +21,11 @@ h1{font-variant:small-caps;letter-spacing:.12em;text-align:center;color:var(--go
 .cover{max-width:340px;margin:0 auto 18px;box-shadow:0 0 40px #e8a53a33}
 .ph{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:180px;margin:0 0 16px;padding:18px;border:2px dashed #4a5f8f;border-radius:10px;background:repeating-linear-gradient(45deg,#0d1a33,#0d1a33 12px,#101f3d 12px,#101f3d 24px);color:#9fb3d1;font-size:.85rem}.ph b{color:var(--gold);letter-spacing:.15em;font-size:.75rem}.ph code{color:var(--blue)}
 #nar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 0;font-size:.8rem;color:#9fb3d1}#nar button{display:inline-block;width:auto;margin:0;padding:6px 12px;font-size:.85rem}#nar select{background:#101a33;color:var(--ink);border:1px solid #33466f;border-radius:6px;padding:5px;font:inherit;max-width:190px}#nar label{display:flex;align-items:center;gap:4px}
+.room{position:relative;container-type:inline-size;margin:0 0 16px;border-radius:10px;overflow:hidden;border:1px solid #2a3a5c;line-height:1}.room img{display:block;width:100%}
+.room .scr{position:absolute;background:#101f37;color:#eaf2ff;display:flex;flex-direction:column;justify-content:center;font-family:"Trebuchet MS",Arial,sans-serif}
+.room .scr.h{left:33.6%;top:20.2%;width:25.5%;height:4.6%;font-size:1.75cqw;font-weight:700;letter-spacing:.05em;padding-left:.6%}
+.room .scr.b{left:33.6%;top:24.6%;width:45%;height:25%;align-items:center;text-align:center;gap:2.2cqw}
+.room .scr .eqn{font-family:Georgia,serif;font-size:4.2cqw;white-space:nowrap}.room .scr .ask{font-size:2.9cqw;color:#cfe0ff}
 .eq{text-align:center;font-size:1.3em;background:#0d1a33;border:1px solid #2a3a5c;border-radius:8px;padding:10px;margin:14px 0}
 .say{margin-left:1em}
 button{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:#101a33;color:var(--ink);border:1px solid #33466f;border-radius:8px;font:inherit;font-size:.95em;cursor:pointer}
@@ -34,7 +39,6 @@ button:hover{border-color:var(--gold);background:#16234a}
 <div class="sub">EPISODE ONE · THE TOMORROW MARKET · AN INTERACTIVE STORY</div>
 <div id="hud"></div>
 <div id="nar" role="group" aria-label="Audio narration"></div>
-<img class="art cover" src="img/cover.jpg" alt="Cover">
 <div id="chap"></div><div id="ctitle"></div>
 <div id="text"></div>
 <div id="choices"></div>
@@ -88,6 +92,10 @@ dosing:'Three drops of gold falling into a glass of water',
 night2:'Nova lying on top of the covers, streetlight orange on the wall, drones silent',
 future:'Older Nova at the foot of the bed in a dark suit, holding the glowing vial'
 };
+function roomHTML(){
+ const sc_=BANDS[S.grade].screen;
+ const ov=sc_?`<div class="scr h" aria-hidden="true">${sc_.head}</div><div class="scr b" aria-hidden="true"><div class="eqn">${sc_.eq}</div><div class="ask">${sc_.ask}</div></div>`:'';
+ return `<div class="room"><img src="img/classroom.jpg" alt="Nova solving the problem on the classroom screen">${ov}</div>`}
 function artHTML(id,name){
  const file=name||id;
  return `<img class="art" src="img/${file}.jpg" alt="" onerror="this.outerHTML='<div class=&quot;ph&quot;><b>IMAGE PLACEHOLDER</b><span>${(ART[id]||'Scene art').replace(/'/g,'&#39;').replace(/"/g,'&quot;')}</span><span>Save as <code>img/${file}.jpg</code></span></div>'">`}
@@ -97,14 +105,14 @@ const sc={};
 
 // ---------- GRADE-LEVEL OPENING ----------
 const BANDS={
- g78:{name:'Grades 7–8 · Algebra',tier:'Helios Scholars Merit Award',
+ g78:{screen:{head:'ALGEBRA',eq:'3x + 7 = 25',ask:'Solve for x'},name:'Grades 7–8 · Algebra',tier:'Helios Scholars Merit Award',
   board:`<div class="eq">Solve for x: 3x + 7 = 25</div>`, opts:['x = 6','x = 8','x = 9','x = 10'], ans:0,
   hint:'Subtract 7 from both sides, then divide by 3.',
   solved:`<p>x = 6. Undo the plus, undo the times. Every equation is a lock and every step is a key.</p>`,
   exam:`The Market's exchange ratio is 4 hours borrowed for every 3 hours repaid. How many hours must you borrow to repay 12?`, eopts:['16','9','15','12'], eans:0, ehint:'4 : 3 = ? : 12. Scale up by 4.',
   more:[{exam:'Solve for x: 5x − 8 = 2x + 13',eopts:['x = 7','x = 5','x = 3','x = 9'],eans:0,ehint:'Subtract 2x from both sides, add 8, then divide by 3.'},
         {exam:'The Market charges a flat fee of 4 hours plus 3 hours per transaction. Your total came to 19 hours. How many transactions? (4 + 3t = 19)',eopts:['t = 5','t = 7','t = 6','t = 4'],eans:0,ehint:'Subtract the flat fee first: 3t = 15.'}]},
- g910:{name:'Grades 9–10',tier:'Helios Academy Presidential Scholarship',
+ g910:{screen:{head:'ALGEBRA II',eq:'x² − 5x + 6 = 0',ask:'Solve for x'},name:'Grades 9–10',tier:'Helios Academy Presidential Scholarship',
   board:`<div class="eq">Solve: x² − 5x + 6 = 0</div>`, opts:['x = 2 or x = 3','x = −2 or x = −3','x = 1 or x = 6','x = 5 or x = 6'], ans:0,
   hint:'Factor: what two numbers multiply to 6 and add to −5?',
   solved:`<p>(x − 2)(x − 3) = 0, so x = 2 or 3. Two roots. Two doors. Both open.</p>`,
@@ -124,7 +132,7 @@ text:()=>`<p>The Daughter Who Borrowed Tomorrow is a story about a girl who sees
 <p>Pick your math level. The questions you'll face are matched to it, and so is the scholarship you're fighting for. Every level gets the full story.</p>`,
 ch_:()=>Object.keys(BANDS).map(k=>({t:BANDS[k].name,do:()=>{S.grade=k},go:'class'}))};
 
-sc.class={img:()=>S.f.ritual?'knuckles':(S.f.board?(S.grade==='g1112'?'board':'class'):'title'),ch:'Chapter 1',title:'The Equation of Life',
+sc.class={art:()=>(S.f.ritual?artHTML('class','knuckles'):(S.f.board?roomHTML():artHTML('class','titlecard')+roomHTML())),ch:'Chapter 1',title:'The Equation of Life',
 text:()=>`<p>My pencil attacked the page like it had something to prove. Around me, sighs and frantic erasing filled the room—the soundtrack of surrender. But I wasn't surrendering. I was hunting.</p>
 <p>${S.f.ritual?'Left hand, right hand, both thumbs. The knuckles cracked. My pre-math ritual since middle school.':'Mr. Turing\'s question sprawled across the board like a beautiful dare.'} Through the cracked window, patrol drones made their rounds. Three more than last month. I'd noticed.</p>
 <p><strong>Answer the question on the board to continue.</strong></p>${B().board}`,
@@ -476,12 +484,12 @@ function hud(){
 }
 function render(){
  hud();
- document.querySelector('.cover').style.display=(S.scene==='grade'||(S.scene==='class'&&!S.f.ritual&&!S.f.board))?'block':'none';
+ 
  const s=sc[S.scene];
  if(s.auto){S.scene=s.auto();return render()}
  $('chap').textContent=s.ch; $('ctitle').textContent=s.title;
  const im=typeof s.img==='function'?s.img():s.img; s.id=S.scene;
- $('text').innerHTML=(s.id==='grade'?'':artHTML(S.scene,im))+S.pend+s.text(); S.pend='';
+ $('text').innerHTML=(s.id==='grade'?'':(s.art?s.art():artHTML(S.scene,im)))+S.pend+s.text(); S.pend='';
  const c=$('choices'); c.innerHTML='';
  (typeof s.ch_==='function'?s.ch_():s.ch_).filter(x=>!x.if||x.if()).forEach(x=>{
   const b=document.createElement('button'); b.innerHTML=x.t;
@@ -513,7 +521,7 @@ function narUI(){
 function stopNar(){if(synth)synth.cancel();if(NAR.audio){NAR.audio.pause();NAR.audio=null}}
 function plain(){
  const el=$('text').cloneNode(true);
- el.querySelectorAll('.ph,img,.log').forEach(x=>x.remove());
+ el.querySelectorAll('.ph,img,.log,.room').forEach(x=>x.remove());
  el.querySelectorAll('sup').forEach(x=>x.replaceWith(' to the '+x.textContent+' '));
  let t=el.textContent;
  t=t.replace(/″/g,' double prime').replace(/′/g,' prime').replace(/²/g,' squared').replace(/³/g,' cubed').replace(/[−–]/g,' minus ').replace(/=/g,' equals ').replace(/\+/g,' plus ').replace(/×/g,' times ').replace(/÷/g,' divided by ').replace(/¾/g,' three quarters ').replace(/\//g,' over ').replace(/[₁₂]/g,m=>({'₁':' 1','₂':' 2'}[m])).replace(/⁻²ˣ/g,' to the negative 2 x');
