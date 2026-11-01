@@ -41,7 +41,7 @@ button:hover{border-color:var(--gold);background:#16234a}
 </main>
 <script>
 // Interactive adaptation of "The Daughter Who Borrowed Tomorrow", Episode 1 (Julia Dove / Rasheedah Prioleau).
-const S={mom:25,vial:100,lies:0,years:0,f:{},scene:'grade',pend:''};
+const S={grade:'g78',mom:25,vial:100,lies:0,years:0,f:{},scene:'class',pend:''};
 const $=id=>document.getElementById(id);
 const log=m=>S.pend+=`<p class="log">${m}</p>`;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -97,21 +97,13 @@ const sc={};
 
 // ---------- GRADE-LEVEL OPENING ----------
 const BANDS={
- k2:{name:'Grades K–2',tier:'Helios Seedling Scholarship',
-  board:`<div class="eq">7 + 5 = ?</div>`, opts:['12','11','13','10'], ans:0,
-  hint:'Count up from 7: eight, nine, ten, eleven, twelve. Five steps.',
-  solved:`<p>Twelve. I boxed it neatly. Mr. Turing smiled — numbers don't lie, and neither did that one.</p>`,
-  exam:`A clock loses 2 minutes every hour. After 4 hours, how many minutes has it lost?`, eopts:['8','6','4','10'], eans:0, ehint:'2 + 2 + 2 + 2 = ?'},
- g35:{name:'Grades 3–5',tier:'Helios Junior Scholars Award',
-  board:`<div class="eq">What is ¾ of 24?</div>`, opts:['18','12','16','20'], ans:0,
-  hint:'Find ¼ of 24 first (24 ÷ 4 = 6), then take three of them.',
-  solved:`<p>Eighteen. Divide by four, then multiply by three. Clean. Simple. Beautiful.</p>`,
-  exam:`A clock loses 3 minutes every hour. After 5 hours, how many minutes has it lost?`, eopts:['15','8','20','12'], eans:0, ehint:'3 × 5.'},
- g68:{name:'Grades 6–8',tier:'Helios Scholars Merit Award',
+ g78:{name:'Grades 7–8 · Algebra',tier:'Helios Scholars Merit Award',
   board:`<div class="eq">Solve for x: 3x + 7 = 25</div>`, opts:['x = 6','x = 8','x = 9','x = 10'], ans:0,
   hint:'Subtract 7 from both sides, then divide by 3.',
   solved:`<p>x = 6. Undo the plus, undo the times. Every equation is a lock and every step is a key.</p>`,
-  exam:`The Market's exchange ratio is 4 hours borrowed for every 3 hours repaid. How many hours must you borrow to repay 12?`, eopts:['16','9','15','12'], eans:0, ehint:'4 : 3 = ? : 12. Scale up by 4.'},
+  exam:`The Market's exchange ratio is 4 hours borrowed for every 3 hours repaid. How many hours must you borrow to repay 12?`, eopts:['16','9','15','12'], eans:0, ehint:'4 : 3 = ? : 12. Scale up by 4.',
+  more:[{exam:'Solve for x: 5x − 8 = 2x + 13',eopts:['x = 7','x = 5','x = 3','x = 9'],eans:0,ehint:'Subtract 2x from both sides, add 8, then divide by 3.'},
+        {exam:'The Market charges a flat fee of 4 hours plus 3 hours per transaction. Your total came to 19 hours. How many transactions? (4 + 3t = 19)',eopts:['t = 5','t = 7','t = 6','t = 4'],eans:0,ehint:'Subtract the flat fee first: 3t = 15.'}]},
  g910:{name:'Grades 9–10',tier:'Helios Academy Presidential Scholarship',
   board:`<div class="eq">Solve: x² − 5x + 6 = 0</div>`, opts:['x = 2 or x = 3','x = −2 or x = −3','x = 1 or x = 6','x = 5 or x = 6'], ans:0,
   hint:'Factor: what two numbers multiply to 6 and add to −5?',
@@ -138,6 +130,7 @@ text:()=>`<p>My pencil attacked the page like it had something to prove. Around 
 <p><strong>Answer the question on the board to continue.</strong></p>${B().board}`,
 ch_:()=>{const q=shuf(B().opts.map((t,i)=>({t,i})));
  const c=[];
+ c.push({t:'⚙ Change my math level ('+B().name+')',do:()=>{},go:'grade'});
  if(!S.f.ritual)c.push({t:'Crack my knuckles first',do:()=>{S.f.ritual=1},go:'class'});
  if(!S.f.board)c.push({t:'Look at the board',do:()=>{S.f.board=1},go:'class'});
  q.forEach(([o])=>c.push({t:o.t,do:()=>{ if(o.i!==B().ans) log('Not quite. Hint: '+B().hint) },go:o.i===B().ans?'solved':'class'}));
@@ -146,7 +139,7 @@ ch_:()=>{const q=shuf(B().opts.map((t,i)=>({t,i})));
 sc.solved={img:'salvation',ch:'Chapter 1',title:'The Equation of Life',
 text:()=>`${B().solved}
 <p>Only a few hands went up. Mine was one of them. Mr. Turing watched me with pride—and something that looked like pity, like a butterfly beating its wings against glass.</p>
-<p>After the bell he asked me to stay. "${S.grade==='k2'||S.grade==='g35'?'You\'re a natural, Nova.':'Excellent work, as always, Ms. Quinn.'} I've submitted your name for the <strong>Helios Academy qualifying exam</strong>. It's tomorrow."</p>`,
+<p>After the bell he asked me to stay. "Excellent work, as always, Ms. Quinn. I've submitted your name for the <strong>Helios Academy qualifying exam</strong>. It's tomorrow."</p>`,
 ch_:[{t:'"The Helios exam?"',go:'helios'}]};
 
 sc.helios={img:'surrender',ch:'Chapter 1',title:'The Equation of Life',
@@ -156,11 +149,12 @@ text:()=>`<p>"The most prestigious school in the city. Their qualifying exam is 
 ch_:[{t:'Walk home through the neighborhood',go:'home1'}]};
 
 sc.examq={ch:'Chapter 2',title:'Testing Limits',
-text:()=>`<p>"You may start… now."</p>
-<p>The first question appeared on the tablet. The neural interface tingled against my temples. <strong>${B().tier}</strong> — this was it.</p>
-<div class="eq" style="font-size:1.05em">${B().exam}</div>`,
-ch_:()=>shuf(B().eopts.map((t,i)=>({t,i}))).map(([o])=>({t:o.t,do:()=>{ if(o.i!==B().eans) log('Not quite. Hint: '+B().ehint); else S.f.examCorrect=1 },go:o.i===B().eans?'exam2':'examq'}))};
+cur:()=>{const bd=B(),all=[{exam:bd.exam,eopts:bd.eopts,eans:bd.eans,ehint:bd.ehint}].concat(bd.more||[]);return {q:all[S.f.qi||0],n:all.length}},
+text:()=>{const c=sc.examq.cur();return `<p>${(S.f.qi||0)===0?'"You may start… now."</p><p>':''}The ${c.n>1?'question':'first question'} appeared on the tablet${c.n>1?' ('+((S.f.qi||0)+1)+' of '+c.n+')':''}. The neural interface tingled against my temples. <strong>${B().tier}</strong> — this was it.</p>
+<div class="eq" style="font-size:1.05em">${c.q.exam}</div>`},
+ch_:()=>{const c=sc.examq.cur();return shuf(c.q.eopts.map((t,i)=>({t,i}))).map(([o])=>({t:o.t,do:()=>{ if(o.i!==c.q.eans)log('Not quite. Hint: '+c.q.ehint); else {S.f.examCorrect=(S.f.examCorrect||0)+1;S.f.qi=(S.f.qi||0)+1} },go:'examq_next'}))}};
 
+sc.examq_next={auto:()=>{const c=sc.examq.cur0?0:0;const bd=B();return (S.f.qi||0)>=1+(bd.more||[]).length?'exam2':'examq'}};
 sc.home1={ch:'Chapter 1',title:'The Equation of Life',
 text:()=>`<p>At Maple and 43rd, Mrs. Genovese swept her tiny square of sidewalk with arthritic hands while a drone hovered overhead. "How's your mama?" she asked, voice dropping. "Tell Mina I've got basil she can come snip."</p>
 <p>I climbed three flights—the elevator had been "temporarily out of service" since middle school—and heard it before I opened the door: Mamma, coughing. Deep, wracking.</p>
@@ -482,7 +476,7 @@ function hud(){
 }
 function render(){
  hud();
- document.querySelector('.cover').style.display=(S.scene==='grade')?'block':'none';
+ document.querySelector('.cover').style.display=(S.scene==='grade'||(S.scene==='class'&&!S.f.ritual&&!S.f.board))?'block':'none';
  const s=sc[S.scene];
  if(s.auto){S.scene=s.auto();return render()}
  $('chap').textContent=s.ch; $('ctitle').textContent=s.title;
