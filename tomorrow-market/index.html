@@ -20,6 +20,7 @@ h1{font-variant:small-caps;letter-spacing:.12em;text-align:center;color:var(--go
 .art{width:100%;max-height:60vh;object-fit:contain;background:#000;border-radius:10px;border:1px solid #2a3a5c;margin:0 0 16px;display:block}
 .cover{max-width:340px;margin:0 auto 18px;box-shadow:0 0 40px #e8a53a33}
 .ph{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:180px;margin:0 0 16px;padding:18px;border:2px dashed #4a5f8f;border-radius:10px;background:repeating-linear-gradient(45deg,#0d1a33,#0d1a33 12px,#101f3d 12px,#101f3d 24px);color:#9fb3d1;font-size:.85rem}.ph b{color:var(--gold);letter-spacing:.15em;font-size:.75rem}.ph code{color:var(--blue)}
+#nar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 0;font-size:.8rem;color:#9fb3d1}#nar button{display:inline-block;width:auto;margin:0;padding:6px 12px;font-size:.85rem}#nar select{background:#101a33;color:var(--ink);border:1px solid #33466f;border-radius:6px;padding:5px;font:inherit;max-width:190px}#nar label{display:flex;align-items:center;gap:4px}
 .eq{text-align:center;font-size:1.3em;background:#0d1a33;border:1px solid #2a3a5c;border-radius:8px;padding:10px;margin:14px 0}
 .say{margin-left:1em}
 button{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:#101a33;color:var(--ink);border:1px solid #33466f;border-radius:8px;font:inherit;font-size:.95em;cursor:pointer}
@@ -32,6 +33,7 @@ button:hover{border-color:var(--gold);background:#16234a}
 <h1>The Daughter Who Borrowed Tomorrow</h1>
 <div class="sub">EPISODE ONE · THE TOMORROW MARKET · AN INTERACTIVE STORY</div>
 <div id="hud"></div>
+<div id="nar" role="group" aria-label="Audio narration"></div>
 <img class="art cover" src="img/cover.jpg" alt="Cover">
 <div id="chap"></div><div id="ctitle"></div>
 <div id="text"></div>
@@ -469,6 +471,7 @@ function ending(id){
   (id==='end_tbc'?`<p class="summary">Mamma's recovery: ${Math.round(S.mom)}% · Vial remaining: ~${Math.round(S.vial/100*12)} months · Lies told: ${S.lies}${S.f.journal?' · You wrote down what you saw.':''}${S.f.askedKnox?'':''}</p><p class="tbc">What does a future you want from you?</p>`:'');
  $('choices').innerHTML='<button onclick="location.reload()">Play again</button>';
  hud();
+ if(NAR.on){stopNar();say(plain()+' '+e[1])}
 }
 function hud(){
  const show=S.f.token?`<div>Years pledged <b>${S.years||0}</b><div class="bar r"><i style="width:${S.years/13*100}%"></i></div></div>`:`<div>Hope <b>${S.f.token?'—':'fragile'}</b></div>`;
@@ -492,7 +495,52 @@ function render(){
   c.appendChild(b);
  });
  window.scrollTo({top:0,behavior:'smooth'});
+ if(NAR.on)speak();
 }
+
+// ---------- AUDIO NARRATION (browser text-to-speech; optional recorded files in audio/<scene>.mp3) ----------
+const NAR={on:localStorage.nar==='1',rate:+(localStorage.narRate||1),voice:localStorage.narVoice||'',choices:localStorage.narCh!=='0',audio:null};
+const synth=window.speechSynthesis;
+function voices(){return synth?synth.getVoices().filter(v=>/^en/i.test(v.lang)):[]}
+function narUI(){
+ const n=$('nar'); if(!synth){n.style.display='none';return}
+ n.innerHTML=`<button id="narT" aria-pressed="${NAR.on}">${NAR.on?'🔊 Narration on':'🔇 Narration off'}</button>
+ <button id="narP" title="Pause or resume">⏯</button><button id="narR" title="Replay this scene">↻</button>
+ <select id="narV" aria-label="Voice">${voices().map(v=>`<option value="${v.name}"${v.name===NAR.voice?' selected':''}>${v.name}</option>`).join('')}</select>
+ <select id="narS" aria-label="Speed">${[.8,.9,1,1.1,1.25,1.5].map(r=>`<option value="${r}"${r===NAR.rate?' selected':''}>${r}×</option>`).join('')}</select>
+ <label><input type="checkbox" id="narC"${NAR.choices?' checked':''}> read choices</label>`;
+ $('narT').onclick=()=>{NAR.on=!NAR.on;localStorage.nar=NAR.on?1:0;narUI();NAR.on?speak():stopNar()};
+ $('narP').onclick=()=>{if(NAR.audio){NAR.audio.paused?NAR.audio.play():NAR.audio.pause()}else if(synth.paused)synth.resume();else synth.pause()};
+ $('narR').onclick=()=>{NAR.on=true;localStorage.nar=1;narUI();speak()};
+ $('narV').onchange=e=>{NAR.voice=e.target.value;localStorage.narVoice=NAR.voice;if(NAR.on)speak()};
+ $('narS').onchange=e=>{NAR.rate=+e.target.value;localStorage.narRate=NAR.rate;if(NAR.on)speak()};
+ $('narC').onchange=e=>{NAR.choices=e.target.checked;localStorage.narCh=NAR.choices?1:0};
+}
+function stopNar(){if(synth)synth.cancel();if(NAR.audio){NAR.audio.pause();NAR.audio=null}}
+function plain(){
+ const el=$('text').cloneNode(true);
+ el.querySelectorAll('.ph,img,.log').forEach(x=>x.remove());
+ el.querySelectorAll('sup').forEach(x=>x.replaceWith(' to the '+x.textContent+' '));
+ let t=el.textContent;
+ t=t.replace(/″/g,' double prime').replace(/′/g,' prime').replace(/²/g,' squared').replace(/³/g,' cubed').replace(/[−–]/g,' minus ').replace(/=/g,' equals ').replace(/\+/g,' plus ').replace(/×/g,' times ').replace(/÷/g,' divided by ').replace(/¾/g,' three quarters ').replace(/\//g,' over ').replace(/[₁₂]/g,m=>({'₁':' 1','₂':' 2'}[m])).replace(/⁻²ˣ/g,' to the negative 2 x');
+ return t.replace(/\s+/g,' ').trim();
+}
+function speak(){
+ if(!synth||!NAR.on)return; stopNar();
+ const cs=$('chap').textContent+'. '+$('ctitle').textContent+'. ';
+ let body=cs+plain();
+ if(NAR.choices){const c=[...$('choices').querySelectorAll('button')].map(b=>b.textContent.trim()).filter(x=>x&&x!=='Play again');if(c.length)body+=' Your choices: '+c.map((x,i)=>'Option '+(i+1)+'. '+x).join('. ')}
+ // optional recorded narration takes priority
+ const a=new Audio(`audio/${S.scene}.mp3`); a.onerror=()=>{ NAR.audio=null; say(body) }; a.oncanplaythrough=()=>{NAR.audio=a;a.play().catch(()=>{})};
+ a.load();
+}
+function say(body){
+ const parts=body.match(/[^.!?]+[.!?]+["”']?|[^.!?]+$/g)||[body];
+ const v=voices().find(x=>x.name===NAR.voice);
+ parts.forEach(t=>{const u=new SpeechSynthesisUtterance(t.trim());u.rate=NAR.rate;if(v)u.voice=v;synth.speak(u)});
+}
+if(synth){synth.onvoiceschanged=narUI}
+narUI();
 function go(id){ if(id.startsWith('end_'))return ending(id); S.scene=id; render() }
 render();
 </script></body></html>
