@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Daughter Who Borrowed Tomorrow — Episode 1: The Tomorrow Market</title>
+<style>
+:root{--gold:#e8a53a;--bg:#070b16;--ink:#e9e4d8;--blue:#6fa8dc;--red:#c0504d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#14233f,var(--bg) 70%) fixed;color:var(--ink);font:18px/1.65 Georgia,serif;display:flex;justify-content:center}
+main{width:min(740px,100%);padding:22px 18px 70px}
+h1{font-variant:small-caps;letter-spacing:.12em;text-align:center;color:var(--gold);font-size:1.45rem;margin:.2em 0 0}
+.sub{text-align:center;color:var(--blue);font-size:.8rem;letter-spacing:.22em;margin:2px 0 14px}
+#hud{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;border:1px solid #2a3a5c;border-radius:10px;padding:10px 12px;background:#0b1224dd;font-size:.8rem;position:sticky;top:0;z-index:2}
+#hud b{color:var(--gold);font-size:.95rem}
+.bar{height:5px;background:#1b2845;border-radius:4px;margin-top:4px;overflow:hidden}
+.bar i{display:block;height:100%;transition:width .5s}
+.g i{background:var(--gold)}.r i{background:var(--red)}.b i{background:var(--blue)}
+#chap{color:var(--blue);font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;margin-top:22px}
+#ctitle{color:var(--gold);font-size:1.35rem;font-variant:small-caps;letter-spacing:.06em;margin:2px 0 14px}
+#text p{margin:0 0 1em}
+.log{color:#9fb3d1;font-style:italic;border-left:2px solid #33466f;padding-left:12px}
+.art{width:100%;max-height:60vh;object-fit:contain;background:#000;border-radius:10px;border:1px solid #2a3a5c;margin:0 0 16px;display:block}
+.cover{max-width:340px;margin:0 auto 18px;box-shadow:0 0 40px #e8a53a33}
+.eq{text-align:center;font-size:1.3em;background:#0d1a33;border:1px solid #2a3a5c;border-radius:8px;padding:10px;margin:14px 0}
+.say{margin-left:1em}
+button{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;background:#101a33;color:var(--ink);border:1px solid #33466f;border-radius:8px;font:inherit;font-size:.95em;cursor:pointer}
+button:hover{border-color:var(--gold);background:#16234a}
+.end{text-align:center;color:var(--gold);font-variant:small-caps;letter-spacing:.15em;font-size:1.25rem;margin:1.4em 0 .4em}
+.tbc{text-align:center;color:var(--blue);letter-spacing:.2em;font-size:.85rem}
+.summary{font-size:.85rem;color:#9fb3d1;text-align:center}
+@media(max-width:520px){#hud{grid-template-columns:repeat(2,1fr)}}
+</style></head><body><main>
+<h1>The Daughter Who Borrowed Tomorrow</h1>
+<div class="sub">EPISODE ONE · THE TOMORROW MARKET · AN INTERACTIVE STORY</div>
+<div id="hud"></div>
+<img class="art cover" src="img/cover.jpg" alt="Cover">
+<div id="chap"></div><div id="ctitle"></div>
+<div id="text"></div>
+<div id="choices"></div>
+</main>
+<script>
+// Interactive adaptation of "The Daughter Who Borrowed Tomorrow", Episode 1 (Julia Dove / Rasheedah Prioleau).
+const S={mom:25,vial:100,lies:0,years:0,f:{},scene:'class',pend:''};
+const $=id=>document.getElementById(id);
+const log=m=>S.pend+=`<p class="log">${m}</p>`;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const dose=d=>{ // d = number of drops
+  if(!d)return; S.vial=clamp(S.vial-d*1.6,0,100); S.mom=clamp(S.mom+d*2.4,0,100);
+  S.f.drops=(S.f.drops||0)+d;};
+
+const sc={};
+
+// ---------- CHAPTER 1 ----------
+sc.class={img:()=>S.f.ritual?'knuckles':(S.f.board?'board':'title'),ch:'Chapter 1',title:'The Equation of Life',
+text:()=>`<p>My pencil attacked the page like it had something to prove. Around me, sighs and frantic erasing filled the room—the soundtrack of surrender. But I wasn't surrendering. I was hunting.</p>
+<p>${S.f.ritual?'Left hand, right hand, both thumbs. The knuckles cracked. My pre-math ritual since middle school.':'Mr. Turing\'s equation sprawled across the board like a beautiful dare.'} Through the cracked window, patrol drones made their rounds. Three more than last month. I'd noticed.</p>
+<p>It was the last day of school. Tomorrow was the Helios Academy qualifying exam—my one shot at a scholarship that could change everything for me and Mamma.</p>
+<div class="eq">y″ + 4y′ + 4y = e<sup>−2x</sup>(3x + 1)</div>
+<p>"Five more minutes," Mr. Turing called. Beside me, Marco erased so hard the paper tore.</p>`,
+ch_:[
+ {t:'Look at the board',if:()=>!S.f.board,do:()=>{S.f.board=1},go:'class'},
+ {t:'Crack my knuckles first',if:()=>!S.f.ritual,do:()=>{S.f.ritual=1},go:'class'},
+ {t:'y = (C₁ + C₂x)e⁻²ˣ + e⁻²ˣ(x³/2 + x²/2)',go:'solved'},
+ {t:'y = (C₁ + C₂x)e⁻²ˣ + e⁻²ˣ(3x + 1)',do:()=>log('Marco leans over. "That can\'t be right, the forcing term matches the homogeneous solution." He\'s right. A repeated root means the usual guess fails.'),go:'class'},
+ {t:'y = C₁e²ˣ + C₂e⁻²ˣ',do:()=>log('That\'s the solution if the roots were different. But r² + 4r + 4 = (r + 2)². One root, repeated.'),go:'class'},
+ {t:'y = (C₁ + C₂x)e⁻²ˣ + e⁻²ˣ(x³ + x²)',do:()=>log('Close. Substitute y = e⁻²ˣu and the whole thing collapses to u″ = 3x + 1. Integrate twice — check those fractions.'),go:'class'}]};
+
+sc.solved={img:'salvation',ch:'Chapter 1',title:'The Equation of Life',
+text:()=>`<p>Substitute y = e<sup>−2x</sup>u and the mess collapses into <em>u″ = 3x + 1</em>. Integrate twice and it clicks into place: y = e<sup>−2x</sup>(x³/2 + x²/2 + C₁x + C₂). I boxed it. Clean. Precise.</p>
+<p>Only three hands went up. Mine was one of them. "Ms. Quinn. Want to walk us through it?" I took the stylus. "This is a non-homogeneous, second-order differential equation. Once you spot that, it's not homework anymore. It's poetry."</p>
+<p>Mr. Turing watched me with pride—and something that looked like pity. A butterfly beating its wings against glass. Because potential didn't pay rent. Brilliance didn't cure whatever was making Mamma cough at night.</p>
+<p>After the bell he asked me to stay. "Tomorrow is more than a test, Nova. You have raw ability most of them don't. Don't let them make you feel less than. Now go. Show them what East District can do."</p>`,
+ch_:[{t:'Walk home through the neighborhood',go:'home1'}]};
+
+sc.home1={ch:'Chapter 1',title:'The Equation of Life',
+text:()=>`<p>At Maple and 43rd, Mrs. Genovese swept her tiny square of sidewalk with arthritic hands while a drone hovered overhead. "How's your mama?" she asked, voice dropping. "Tell Mina I've got basil she can come snip."</p>
+<p>I climbed three flights—the elevator had been "temporarily out of service" since middle school—and heard it before I opened the door: Mamma, coughing. Deep, wracking.</p>
+<p>She was bent over the sink with a dish towel pressed to her mouth. The towel was spotted bright red. Her skin was gray. When I touched her forehead she was burning.</p>
+<p>"It's nothing, tesoro. Hospital germs."</p>`,
+ch_:[
+ {t:'"You\'re going to the doctor. I don\'t care what we can afford."',do:()=>{S.f.insist=1;log('"Tomorrow," she whispers. "I\'ll call Dr. Rossi tomorrow." She won\'t. We both know.')},go:'night1'},
+ {t:'Say nothing. Make her tea and soup.',go:'night1'}]};
+
+sc.night1={img:'face',ch:'Chapter 1',title:'The Equation of Life',
+text:()=>`<p>That night I listened to her breathe through the thin wall. Every cough clenched my heart. Every pause stretched too long. My mind did what it always did—it calculated. Even if I got into Helios, graduation was two years away. College after that. Would she see any of it?</p>
+<p>I pressed my face into my pillow so she wouldn't hear me cry.</p>
+<p>In the morning she was already dragging herself into her hospital uniform. "Need the hours. Need the money." She kissed my forehead. "Just focus on your test, tesoro."</p>
+<p>I let myself imagine it fully: returning to East District with power. Fixing handrails. Telling her <em>you don't have to work double shifts anymore.</em></p>
+<p>I had no idea that by the end of it all, that fragile, stupid hope would cost me everything.</p>`,
+ch_:[{t:'Take two buses to Mid-District',go:'exam'}]};
+
+// ---------- CHAPTER 2 ----------
+sc.exam={ch:'Chapter 2',title:'Testing Limits',
+text:()=>`<p>The testing center was a sleek glass building in Mid-District. The lobby was full of my competition—kids in perfectly fitted clothes whose parents hovered like this was one step in a plan. For them, it was Plan A. For me, it was the only plan that existed.</p>
+<p>Room 347: eight desks, tablets, silver neural-interface headsets. A placard read <em>High-Aptitude Candidates</em>.</p>
+<p>"First time seeing equipment like this?" A tall man in his thirties with eyes whose irises shifted like camera lenses. "Dr. Eli Knox, Academic Placement Consultant. You must be Nova Quinn. Mr. Turing spoke very highly of you."</p>
+<p>He already knew who I was. He settled the headset against my temples with surprising gentleness. Then the room's whispers rose—a boy with blonde hair threaded with silver had entered, carrying a tablet and wearing a proctor's badge. <strong>Kai Thorne.</strong> Seventeen, published on temporal mechanics, family practically owns half the Upper Tier.</p>
+<p>When his gaze passed over me I felt not butterflies but <em>déjà vu</em>. Like remembering someone I hadn't met yet.</p>`,
+ch_:[
+ {t:'Ask Dr. Knox what "advanced evaluation protocols" means',do:()=>{S.f.askedKnox=1;log('"Later," he says smoothly. "Focus on the problems."')},go:'exam'},
+ {t:'Put on my game face and begin',go:'exam2'}]};
+
+sc.exam2={ch:'Chapter 2',title:'Testing Limits',
+text:()=>`<p>"You may start… now."</p>
+<p>The mathematics section sang. Then something went subtly wrong: the interface's hum deepened, sounds muffled, the air grew cold and misty, and the room began to float. No one else noticed. My voice was gone.</p>
+<p>Across from me was a mirror of the entire room—and at the desk matching mine sat <em>me</em>. Same face, same hair. She floated up from her chair, glided to the invisible barrier and pressed her palms to it. I pressed mine against hers. Warmth spread through my fingers. Her lips moved—</p>
+<p><strong>CRASH.</strong></p>`,
+ch_:[{t:'Come back to the room',go:'exam3'}]};
+
+sc.exam3={ch:'Chapter 2',title:'Testing Limits',
+text:()=>`<p>My tablet was blank. The headset smoked, a thin wisp of acrid vapor rising from the sensors.</p>
+<p>"Neural feedback loop," Kai murmured to Dr. Knox. "Look at the burn pattern. This wasn't a simple malfunction."</p>
+<p>"Incompatible with the testing protocol," Dr. Knox said gently. "The Helios evaluation can only be administered once per year. Perhaps one in ten thousand candidates experience this."</p>
+<p>One in ten thousand. Of course it would be me. Without a score, an East District kid had no chance.</p>
+<p>Kai caught up with me at the door. "Are you okay? And I don't mean the test." It was the first time all day anyone had asked. "A headache will start in a few hours, behind your eyes. Drink more water than you think you need. And if you see anything—afterimages, déjà vu, anything that feels like the room isn't quite yours—don't panic. Maybe write down what you see. Sometimes it matters."</p>`,
+ch_:[
+ {t:'"I\'ll write it down."',do:()=>{S.f.journal=1;log('He nods, as if that was the right answer. "Be careful, Nova."')},go:'exam4'},
+ {t:'"What does a proctor know about what people see?"',do:()=>{S.f.suspect=1;log('Something flickers across his face. He is gone before he answers.')},go:'exam4'}]};
+
+sc.exam4={ch:'Chapter 2',title:'Testing Limits',
+text:()=>`<p>On the bus home the headache arrived exactly as promised. At least one thing today had gone as predicted.</p>
+<p>"How did it go, tesoro?" Mamma called weakly.</p>
+<p>"It went fine, Mamma. I'll know the results in a few days."</p>
+<p>Some lies are kinder than the truth.</p>
+<p>I drank two glasses of water because a stranger told me to, hated that I was following his instructions, and slept eleven hours without dreaming.</p>`,
+ch_:[{t:'Chapter 3',do:()=>{S.lies++},go:'diner'}]};
+
+// ---------- CHAPTER 3 ----------
+sc.diner={ch:'Chapter 3',title:'Dreams and Reality',
+text:()=>`<p>Mel's Diner hadn't changed in ten months: cracked vinyl booths, flickering light, fryer grease. Raf nodded from the flat-top. Sal lowered his paper one inch: "Well if it isn't my favorite brain." Marisol hugged me. Mel said "Quinn" without smiling, which was how Mel said hello.</p>
+<p>At six-thirty she shoved a plate of meatloaf and a lopsided lemon meringue at me. "Eat." At seven she paid me in cash. "Welcome back, Quinn."</p>
+<p>At home, Mamma was at the stove with rigatoni and the last of the Parmesan. The Helios envelope sat on the table, still sealed. "I wanted to wait for you."</p>
+<p>I opened it. <em>Accepted.</em> She pressed my hand to her cheek, eyes wet. Then I read page two: <em>Full tuition: twenty-five thousand credits annually. Due to technical difficulties during the evaluation process, scholarship funding could not be determined.</em></p>`,
+ch_:[
+ {t:'Tell her the truth: "The scholarship didn\'t come through."',go:'diner2'},
+ {t:'Buy us one more evening: "They\'re still working out the package."',do:()=>{S.lies++;log('She smiles. It is a small, brave smile, and I will pay for it later.')},go:'diner2'}]};
+
+sc.diner2={ch:'Chapter 3',title:'Dreams and Reality',
+text:()=>`<p>Mamma squared her shoulders. "All right. Let's think. The weekend rotation at the Mid-District branch—almost double on overnight shifts. Father DiNardo's parish fund. Nonna's ring—"</p>
+<p>"Mamma, stop. You can barely stand at the end of the shifts you work now. I hugged you last week and my arms went all the way around your ribs. I've done the math." I set the day's pay beside the letter. "If I work every day this summer, I'll have eighteen hundred credits by September. That's not tuition. That's the uniform."</p>
+<p>She touched the raw pink skin on my palm. "I wanted to give you one thing that wasn't this." Then, very low: "<em>Maybe we could find your father.</em>"</p>
+<p>Twelve years she hadn't said that word. There's a photo in a shoebox in her closet: a man laughing with his whole face. My nose. My hands, probably.</p>
+<p>"Forget I said that—" She stood, and the cough came from nowhere. A napkin. Red, too bright, too much. Her knees gave out.</p>
+<p>The glass in my hand shattered on the linoleum. I was on the floor beside her before the last piece stopped moving.</p>`,
+ch_:[{t:'Ride in the ambulance',go:'hospital'}]};
+
+// ---------- CHAPTER 4 ----------
+sc.hospital={ch:'Chapter 4',title:'Before the Dawn',
+text:()=>`<p>Mid-District General. "Severe exhaustion, dehydration, and blood work with concerning irregularities," said Dr. Rodriguez. "Your mother is very sick, Nova. It's been progressing for some time."</p>
+<p>Tests. Imaging. A biopsy. More bills. Hospital plus lost wages plus rent due Monday equaled a crisis the tuition gap made look trivial. There was no equation for this.</p>
+<p>Eliza came in pajama pants and a hoodie, twenty minutes after I called. I told her everything. "Why didn't you tell me about the money?" "Because what could you do? Your family escaped East District."</p>
+<p>She was quiet. Then: "My mother didn't escape through hard work. She made a deal."</p>`,
+ch_:[
+ {t:'"What kind of deal?"',go:'eliza'}]};
+
+sc.eliza={ch:'Chapter 4',title:'Before the Dawn',
+text:()=>`<p>"The Tomorrow Market," Eliza whispered. "A man pushes a cart around the district—he knows everyone's name and shows up when people are desperate. People trade years of their lives for money. My mom traded fifteen years to get us out of East District. She's thirty-five and aging like she's fifty. Young, smart people get better rates."</p>
+<p>"His name is Darryl. He sets up near the old subway entrance on Fifteenth. Ask for a token. But Nova—the Market takes more than it gives. When you trade years, you also trade everything that might have happened in them."</p>
+<p>"But Mamma would be alive."</p>
+<p>"Yes. She would be alive."</p>
+<p>That night I checked the envelope behind the flour canister. Forty-seven credits. Rent due Monday. Every equation led to <em>not enough</em>. I remembered a man with a cart who'd known my mother's name and made her face go white. <em>That man would sell you your own soul.</em></p>
+<p>I stared at the ceiling until three a.m. The decision should have felt terrifying. Instead it felt like the most rational thing I'd ever done.</p>`,
+ch_:[
+ {t:'Go find Darryl',go:'darryl'},
+ {t:'Stay home. Look for any other way.',go:'end_stay'}]};
+
+// ---------- CHAPTER 5 ----------
+sc.darryl={ch:'Chapter 5',title:'The Junk of the World',
+text:()=>`<p>The district market was winding down. In its forgotten corner, Darryl arranged what looked like the world's most elaborate junk: clocks with hands that spun backward, hourglasses filled with liquid starlight, brass instruments with dials that moved on their own. People's eyes slid past him. The drones avoided his stall.</p>
+<p>I watched a boy buy a pulsing metal disc and walk away, shoulders curved like he was hiding something shameful. And a memory hit me like a blow:</p>
+<p>I was ten, hunting scissors in Mamma's dresser, and found a coin covered in spiraling equations. She snatched it from me, white-faced. "Some things are too dangerous for little girls to play with."</p>
+<p>She hadn't been hiding money. She'd been hiding proof that she had already sold pieces of her life for mine. All those times the bills somehow got paid. <em>Oh, Mamma. What did you do?</em></p>`,
+ch_:[{t:'Walk up to the cart',go:'darryl2'}]};
+
+sc.darryl2={ch:'Chapter 5',title:'The Junk of the World',
+text:()=>`<p>"I wondered how long you'd stand there watching," Darryl said. "Come closer, Nova Quinn. Mina Quinn's daughter. Sixteen years old. Currently calculating whether desperation outweighs fear."</p>
+<p>He set a leather journal on the cart. I knew it. Four years old, on a low shelf, the morning my father left. The same tarnished green clasp. And on the lower right corner, a small scratch—mine, from my mother's costume ring, because I'd wanted to leave a mark on something that was his.</p>
+<p>"Antonio Quinn," Darryl said. "Perhaps the most mathematically gifted person I've ever encountered. He understood temporal mechanics in ways that terrified him."</p>`,
+ch_:[
+ {t:'"Stop. He has nothing to do with me. He walked out."',do:()=>{S.f.harsh=1},go:'darryl3'},
+ {t:'Stay silent. Stare at the scratch.',go:'darryl3'}]};
+
+sc.darryl3={ch:'Chapter 5',title:'The Junk of the World',
+text:()=>`<p>"Was he nothing, or was he something?" My voice cracked. "He can't be both."</p>
+<p>"He was both," Darryl said quietly. "That's what brilliant men are, sometimes."</p>
+<p>My hand closed around the journal. The leather was warm, like it had been sitting in sun I couldn't see.</p>
+<p>"I'm not doing this for him."</p>
+<p>"I know."</p>
+<p>The pages looked blank until I tilted them into the light: equations and diagrams in handwriting eerily like mine. <em>Temporal displacement theory.</em> "After they recruited him, he understood what was coming. He saw what his research would be used for. And he knew that staying would put you and your mother in danger."</p>
+<p>"What if saving her meant dooming thousands of others?" Darryl asked.</p>
+<p>"I don't care about thousands of others. I care about my mother."</p>
+<p>"Your father said the same, once. About you."</p>`,
+ch_:[
+ {t:'Take the token. Ask what it costs.',go:'darryl4'}]};
+
+sc.darryl4={ch:'Chapter 5',title:'The Junk of the World',
+text:()=>`<p>He pulled a pulsing disc from beneath the cart—the same kind my mother had hidden twelve years ago. Up close, the equations on its surface moved.</p>
+<p>"For you? Nothing. Consider it a gift for your father."</p>
+<p>When our skin touched, the world tilted. I felt the weight of choices not yet made, futures that branched and tangled and burned.</p>
+<p>"The Market opens at midnight. Start at the abandoned subway entrance on Carson Street. Seven rights, ten lefts, seven more rights. And Nova—once you walk through those doors, you can never pretend you don't know what you know."</p>
+<p>"And if I change my mind?"</p>
+<p>"Then you go home and watch your mother die of extraordinary causes. But we both know you won't. You're too much your father's daughter."</p>
+<p>A drone peeled out of its route and paced me for half a block before drifting away.</p>`,
+ch_:[{t:'Go to Carson Street',do:()=>{S.f.token=1},go:'tunnel'}]};
+
+// ---------- CHAPTER 6 ----------
+sc.tunnel={ch:'Chapter 6',title:'The Tomorrow Market',
+text:()=>`<p>11:30 p.m. The rusted gates hung open like a mouth frozen mid-scream. Twenty-three steps to the first landing; I counted every one. The platform was lit sick-green and covered in graffiti that wasn't tags—spirals, hourglasses, equations that moved when I looked away.</p>
+<p>My phone died despite being fully charged. The light turned too blue, shadows fell upward. The walls breathed. At one point I walked across what should have been the ceiling.</p>
+<p><strong>What were Darryl's directions?</strong></p>`,
+ch_:[
+ {t:'Seven rights, ten lefts, seven more rights',go:'chamber'},
+ {t:'Ten rights, seven lefts, ten more rights',do:()=>log('Wrong. The tunnel loops. The same green platform. You start over, ice-cold, hearing Darryl\'s voice in your head.'),go:'tunnel'},
+ {t:'Seven lefts, ten rights, seven more lefts',do:()=>log('Wrong. The walls rearrange themselves. You come out at the platform, shaking. Think—seven rights, first.'),go:'tunnel'}]};
+
+sc.chamber={ch:'Chapter 6',title:'The Tomorrow Market',
+text:()=>`<p>The circular chamber at last, and it followed normal rules. My watch had frozen at 11:59. I set the token in the shallow depression in the floor and stepped back.</p>
+<p>The walls lit like a computer booting. The floor turned to marble inlaid with gold and silver circuits, then became a clock face whose hands moved in spirals. An arch opened, full of golden light and the sound of commerce.</p>
+<p>The Market was an obscenity: a ceiling that vanished into its own weather, clock faces the size of buildings drifting through the clouds. Signs: EMERGENCY YEARS—IMMEDIATE PROCESSING. PREMIUM TIME HARVESTING—YOUTH SPECIALIST. BULK DECADES—DISCOUNT RATES FOR FAMILIES.</p>
+<p>The desperate were herded toward processing lines. The wealthy browsed boutiques selling "artisanal years."</p>
+<p>At an EMERGENCY RELIEF booth, a boy no older than eighteen sold ten years for his little sister's surgery. <em>Net payment: thirty-eight thousand.</em> I followed through the door. The machines wrote equations onto the air around him. He screamed, silently, behind soundproofing, and youth drained from his face. They handed him a bank card and a pamphlet.</p>`,
+ch_:[
+ {t:'Watch him go, and decide',go:'plaza'}]};
+
+// ---------- CHAPTER 7 ----------
+sc.plaza={ch:'Chapter 7',title:'Fair Market Value',
+text:()=>`<p>The central plaza held an enormous clockwork orrery, golden spheres turning around a light, and mathematical formulas shifting in the air. It would have made Mr. Turing's head explode in the best way. Now it felt like witnessing the mathematics of damnation.</p>
+<p>"First visit?" An attendant with a young face and ancient eyes. "Your token suggests you're eligible for advantageous terms. The premium booth handles unique cases. The Market has been waiting for someone like you."</p>
+<p>The premium booth was all soft lighting. The assessor had a practiced smile and took my token. "Nova Quinn. Sixteen years, three months, fourteen days. No prior transactions. Exceptional mathematical aptitude. Your mother sold years to fund your education. Now you're considering doing the same for her health."</p>
+<p>My timeline hung in 3D, branching like a tree. "One year: 5,000 credits. Five years: 25,000. Ten years: 50,000."</p>`,
+ch_:[
+ {t:'"What if I transferred time to her directly?"',go:'booth'},
+ {t:'Sell years for cash and walk away',do:()=>{S.years=10},go:'booth2'}]};
+
+sc.booth={ch:'Chapter 7',title:'Fair Market Value',
+text:()=>`<p>Something flickered in the assessor's face. This was what he'd been waiting for.</p>
+<p>"Direct transfer is our most sophisticated service. The conversion ratio is four-to-three. Temporal energy is lost in transfer. The Market cannot operate at zero profit."</p>
+<p>My mother's timeline was laid over mine, shorter than it should be and frayed where pieces had been cut away. "Mina Quinn has sold fifteen years across three transactions. A ten-year transfer would reverse about forty percent of the effects. Complete restoration is unlikely. Also—your token expires in forty-seven minutes."</p>
+<p>A fake deadline. It worked anyway. I walked toward the exit, stopped inside the archway. If I crossed it, my mother would die.</p>`,
+ch_:[
+ {t:'Go back. "Direct transfer. Ten years to my mother."',do:()=>{S.years=13},go:'booth2'},
+ {t:'Leave through the arch and go home',go:'end_stay'}]};
+
+sc.booth2={ch:'Chapter 7',title:'Fair Market Value',
+text:()=>`<p>"At the standard ratio that costs you ${S.years===13?'thirteen years and four months':'ten years'}." ${S.years===13?'"I know. I did the math."':'"Just the years, then."'}</p>
+<p>A contract materialized on the desk, glowing gold, formulas in the margins like infernal fine print. Thirteen birthdays. Thirteen summers. Thirteen chances to fall in love or discover something beautiful. Against ten more years of her terrible jokes and perfect risotto and the way she hummed when she cooked.</p>
+<p>That had to be worth anything they took. My hand was steady. I gripped the stylus.</p>
+<p>"I wouldn't sign that if I were you," someone said with quiet authority from the doorway.</p>`,
+ch_:[
+ {t:'Put the stylus down and turn around',go:'knox'},
+ {t:'Sign. Right now. Before anyone stops you.',go:'end_chair'}]};
+
+// ---------- CHAPTER 8 ----------
+sc.knox={ch:'Chapter 8',title:'The Alternative',
+text:()=>`<p>Dr. Eli Knox. The confident consultant from the exam was gone; his eyes had stopped cycling and his face had gone still with fear. "Five minutes," he told the assessor. Not a request.</p>
+<p>"Nova. Walk with me."</p>
+<p>It was the heaviest thing I'd ever set down, that stylus. My mother was still dying. Nothing about that had changed in fifteen seconds.</p>
+<p>He led me down a narrow corridor into an office with a wall of glass over the Market floor. From above, the structure was clear: radial rings. The desperate funneled inward, the wealthy browsing the outer circles. "About forty years like this. They didn't build the Market—it existed before, some natural fold in temporal infrastructure. They built the infrastructure around it. The tokens, the routes, the chambers. The families that fund the Meridian Institute: Reid Technologies. The Thornes."</p>
+<p>The Thornes. <em>He hadn't been monitoring the equipment. He'd been monitoring me.</em></p>
+<p>Below us, a boy with blonde hair threaded with silver moved through the premium boutiques like he had grown up there. A vendor bowed to him.</p>`,
+ch_:[{t:'"Why are you here, Eli?"',go:'knox2'}]};
+
+sc.knox2={ch:'Chapter 8',title:'The Alternative',
+text:()=>`<p>"I came to keep you out of that booth. Because I think you're more useful to me whole than you are in vials."</p>
+<p>The offer underneath the offer. I felt the settling that comes when you see the size of what you're standing in front of.</p>
+<p>"The neural interfaces measure something called a temporal signature—the way a consciousness interacts with time. Yours is one of the cleanest the equipment has ever read. The 'malfunction' was an overload. We've seen it three times in fifteen years."</p>
+<p>"Three."</p>
+<p>"The other two are dead. A girl your age six years ago. A boy four years ago, who came with a token his mother gave him. With a signature like that, they don't buy your years. They buy you whole. If you had signed, you wouldn't have come back up."</p>`,
+ch_:[
+ {t:'"You should have led with that."',go:'knox3'}]};
+
+sc.knox3={ch:'Chapter 8',title:'The Alternative',
+text:()=>`<p>"I know. I'm sorry." His eyes cycled faster. "The alternative: a summer cohort at the Meridian Research Institute. Full scholarship, stipend, room and board. After certification, graduates earn sixty to eighty thousand credits a year. Enough for your mother's treatment and a life where you never come back here."</p>
+<p>"Doing what?"</p>
+<p>"Future borrowing. Training your consciousness to travel cleanly along your signature's natural lines. Observing future timelines. Reporting back."</p>`,
+ch_:[
+ {t:'"Whose future timelines?"',do:()=>{S.f.q1=1},go:'knox4'},
+ {t:'"What happens if I say no?"',go:'knox4'}]};
+
+sc.knox4={ch:'Chapter 8',title:'The Alternative',
+text:()=>`<p>"That depends on the assignment. The work is classified above my clearance. You get a room. You get fed. You get paid. Your mother gets her treatment and she lives. In exchange, you do the work. Whoever is paying for it. I don't get to ask. Neither will you. That's the trade."</p>
+<p>I did the math with my eyes closed. If I went back to the booth, I died. If I walked out the gate, I went home and watched her die. If I said yes, I lived, she lived, and the catch was a catch I couldn't see. The booth's catch I could see all the way to the bottom.</p>
+<p>"What happens if I say no to this too?"</p>
+<p>"Then you go home."</p>`,
+ch_:[
+ {t:'"I want to do it." ("You sure?" "No." "Okay." "But yes.")',go:'vial'},
+ {t:'Walk out. I won\'t become anyone\'s instrument.',go:'end_stay'}]};
+
+sc.vial={ch:'Chapter 8',title:'The Alternative',
+text:()=>`<p>He drew a crystal vial from his jacket. Liquid gold moved against the glass like something alive. "One year of refined chrono-essence. Premium grade. Take it."</p>
+<p>"Whose year?"</p>
+<p>"I don't know. The Institute keeps a reserve. I don't get the manifest."</p>
+<p>"That's not what I asked."</p>
+<p>"I know it isn't." He tried again. "The treatment will save her life for now, but it won't give back the time she sold. This will give her one year immediately and begin to reverse her aging. Finish the summer cohort and the Institute will restore it all. Slowly enough that she'll attribute it to the treatment. Three drops at a time, in food or drink, without her noticing."</p>
+<p>It was beautiful. That was the worst part. Twelve months of mornings and meals. A child's first words they'd never hear. A Tuesday in March where someone had planned to call their sister.</p>`,
+ch_:[
+ {t:'Take it.',do:()=>{S.f.vialTaken=1;S.lies++},go:'elysium'},
+ {t:'Refuse. I won\'t spend a stranger\'s year.',go:'end_clean'}]};
+
+sc.elysium={ch:'Chapter 8',title:'The Alternative',
+text:()=>`<p>"Monday, seven a.m., a car will come. Tell her it's an internship—there's a research program, she can call it and verify. Cover stories." He handed me a golden tablet. "That's what they are."</p>
+<p>A knock. A tall woman with platinum hair, a cream dress, a flute of something that didn't match the décor. Her pale eyes cataloged me. Eli's whole body had reorganized: shoulders set, hands folded.</p>
+<p>"Elysium Reid," she said warmly. "I've been hoping to meet you. Eli has been telling me about you for weeks. You exceeded every expectation, even with the malfunction. The Institute is fortunate that he reached you first." She slid a thick cream card into my hand. "If you ever need anything. I look forward to watching your development at Meridian. You're going to be quite valuable to us."</p>
+<p>She turned and left. I put the card in the same pocket as the vial.</p>
+<p>We walked the path in reverse: seven lefts, ten rights, seven more lefts. Carson Street smelled like East District. Like home. The only thing I still trusted.</p>
+<p>I had saved my mother. <em>Right?</em></p>`,
+ch_:[{t:'Go home',go:'home2'}]};
+
+// ---------- CHAPTER 9 ----------
+sc.home2={ch:'Chapter 9',title:'Hope Against Hope',
+text:()=>`<p>Climbing the three flights, I heard her cough. She was at the stove with the hospital band still on her wrist. "I discharged myself. One night cost more than I make in two weeks. We'd lose everything—the apartment, your Helios opportunity."</p>
+<p>"Sit. Let me make the tea." I uncapped the vial. My heart was racing. How much should I give her?</p>`,
+ch_:[
+ {t:'Three drops, as instructed',do:()=>dose(3),go:'home3'},
+ {t:'Six drops. She needs this now.',do:()=>{dose(6);log('The gold bleeds into the chamomile like light into water.')},go:'home3'},
+ {t:'One drop. I\'m afraid of what it is.',do:()=>{dose(1)},go:'home3'}]};
+
+sc.home3={ch:'Chapter 9',title:'Hope Against Hope',
+text:()=>`<p>She drank the tea. "You're a good daughter, Nova. Better than I deserve."</p>
+<p>"I have news. A summer fellowship at the Meridian Research Institute. Consciousness and time perception. Mostly mathematics. I met them at a career fair with Eliza. Six weeks, paid."</p>
+<p>The lie was easier with her eyes half-closed, and I hated that it was easier.</p>
+<p>"Good," she said. "You should go. Tell me after. I'm proud of you. Whatever it is."</p>
+<p>I put her to bed. She felt even smaller than yesterday. In the kitchen I collapsed against the cabinet with the vial in my hands and sobbed into my knees. <em>What if one year isn't enough? What if Eli lied?</em></p>
+<p>Before dawn, 4:47 a.m., I carried her breakfast tray in.</p>`,
+ch_:[
+ {t:'Three drops in the morning tea',do:()=>{dose(3);S.lies++},go:'home4'},
+ {t:'No drops. Let her body rest.',do:()=>{S.lies++},go:'home4'},
+ {t:'Six drops. Hurry.',do:()=>{dose(6);S.lies++},go:'home4'}]};
+
+sc.home4={ch:'Chapter 9',title:'Hope Against Hope',
+text:()=>`<p>${S.f.drops>=3?'As she sat up, gray strands at her temples slowly darkened to chestnut brown, like someone painting them with an invisible brush. The sharp angles of her knuckles had softened.':'She looked the same. I told myself that was patience, not failure.'}</p>
+<p>I woke at the kitchen table to the smell of toast. Mamma, humming at the counter, hair up in a loose knot. ${S.mom>=45?'The tremor in her hands was gone. Not muted. Gone.':'Her hands still trembled, but less.'}</p>
+<p>"Tesoro! Coffee?" She hadn't made coffee in a year and a half. She asked for eggs. She ate the whole plate. "Madonna, I'm full. That was a real breakfast."</p>
+<p>I made my face do something normal.</p>`,
+ch_:[{t:'Chapter 10',go:'park'}]};
+
+// ---------- CHAPTER 10 ----------
+sc.park={ch:'Chapter 10',title:'The Future Problem',
+text:()=>`<p>She wanted to go for a walk. She hadn't wanted to go anywhere in eight months. "Just to the park. I want to see something that isn't this kitchen."</p>
+<p>I almost said <em>let's wait until tomorrow</em>. But saying it would have been telling her to be sicker than she was. So I helped her into the green sweater with the wooden buttons, and she went down three flights on her own.</p>
+<p>On the bench in the sun she closed her eyes like a cat in the warmest patch of floor. "I have been very tired for a long time. I think we've both been pretending, in different directions. Not the body—the body is the easy part. It's the wanting. You stop hoping, because if you imagine it and it doesn't happen, it will kill you."</p>
+<p>"Today I want things again. I want to garden. I want to make the four-cheese lasagna. I want to go to the ocean. I haven't been in twelve years. I'm going to take you and we'll eat clams and I'll teach you to swim like an Italian instead of like Americans. Like they're angry at the water."</p>
+<p>I laughed. It came up wet. She didn't see, because she was looking at the trees.</p>`,
+ch_:[{t:'Take her home to nap',go:'dosing'}]};
+
+sc.dosing={ch:'Chapter 10',title:'The Future Problem',
+text:()=>`<p>She was only a little tired, the tired of a woman who had walked a few blocks. I covered her with the throw blanket and sat at the kitchen table with the vial in my hand. <em>I am not going to stop.</em></p>
+<p>${S.f.lunch===undefined?'Lunch. Her water glass.':S.f.tea===undefined?'Afternoon tea.':'Dinner. The broth.'}</p>
+<p style="color:#9fb3d1">Vial: about ${Math.round(S.vial/100*12)} months remain.</p>`,
+ch_:[
+ {t:'Three drops',do:()=>{dose(3);adv()},go:'dosing_next'},
+ {t:'No drops this time',do:()=>{adv()},go:'dosing_next'},
+ {t:'Six drops',do:()=>{dose(6);adv()},go:'dosing_next'}]};
+function adv(){ if(S.f.lunch===undefined)S.f.lunch=1; else if(S.f.tea===undefined)S.f.tea=1; else S.f.dinner=1; }
+sc.dosing_next={auto:()=>S.f.dinner?'night2':'dosing'};
+
+sc.night2={ch:'Chapter 10',title:'The Future Problem',
+text:()=>`<p>By evening Mamma had eaten three full meals, her hands were a forty-year-old's, and she had told me three stories about her mother I'd never heard. She went to bed at nine and asked me to leave the hall lamp on.</p>
+<p>I took the Helios letter from my desk drawer and read it again. Twenty-five thousand credits a year. <em>Scholarship pending evaluation review.</em> A problem for a future me. I closed the drawer slowly, like closing a door on a room I might come back to.</p>
+<p>I washed my face. The girl in the mirror had the tired Mamma described in the park: the tired of no longer being able to want things the simple way. ${S.lies>=3?'Lies told: '+S.lies+'. I had stopped counting out loud.':''}</p>
+<p>I lay down on top of the covers. The patrol drones hummed through their evening rotation. Then, all at once, they didn't—every drone in hearing silenced in the same instant, like birds before an earthquake. The radiator clicked.</p>
+<p>And then the air in the room changed.</p>`,
+ch_:[{t:'Sit up',go:'future'}]};
+
+sc.future={ch:'Chapter 10',title:'The Future Problem',
+text:()=>`<p>The shimmer began at the foot of my bed. Not light—the absence of clarity, a blurred place the size of a fist that bloomed into the outline of a girl my own height. She came into focus like a photograph in a darkroom.</p>
+<p>She was me. Older by two or three years. Hair longer, face thinner, a faint shimmer where her shoulder met the air. A dark, fitted suit I didn't own. A small dark pendant at her collarbone. The eyes of a woman who had been somewhere terrible and come back changed.</p>
+<p>She held up the vial. The gold moved against the glass—${S.vial>60?'most of someone\'s year':S.vial>30?'half a year of someone\'s life':'only a few months of someone\'s life'}, glowing back at me from a hand that was mine and not mine.</p>
+<p class="say">"So," she said, her voice raw and hollow. "You hear the words <em>future borrowing</em> but don't expect the future might come knocking?"</p>`,
+ch_:[{t:'End of Episode One',go:'end_tbc'}]};
+
+// ---------- ENDINGS ----------
+const E={
+end_stay:['You go home. At dawn the hospital calls about the bill. Some equations really have no answer except loss. Whatever else is out there, you never find out what the Market wanted you for.','Ending: The Unopened Door'],
+end_chair:['The stylus moves. For one heartbeat you feel thirteen years leave you like a held breath. Then the chair keeps going. The equations in the air spin faster, feeding on a signature the Market has waited years to harvest. Somewhere above, Eli arrives a minute too late. Your mother never learns what the cost of her recovery was—only that, one night, a Tuesday goes missing from the calendar. You do not come back up.','Ending: Sold Whole'],
+end_clean:['You hand the vial back. Eli does not argue. Mamma gets her treatment—weeks later, in a bed paid for by the Institute\'s stipend—but the years she sold stay sold. You walk the hospital halls with clean hands and a mother who is stable, not healed. The summer cohort begins Monday. You are the only one in it who didn\'t drink a stranger\'s year. You wonder whether that makes you stronger or just slower.','Ending: Clean Hands'],
+end_tbc:()=>['','To be continued — Episode Two']
+};
+function ending(id){
+ let e=E[id]; if(typeof e==='function')e=e();
+ $('chap').textContent=''; $('ctitle').textContent='';
+ $('text').innerHTML=(e[0]?`<p>${e[0]}</p>`:'')+`<div class="end">${e[1]}</div>`+
+  (id==='end_tbc'?`<p class="summary">Mamma's recovery: ${Math.round(S.mom)}% · Vial remaining: ~${Math.round(S.vial/100*12)} months · Lies told: ${S.lies}${S.f.journal?' · You wrote down what you saw.':''}${S.f.askedKnox?'':''}</p><p class="tbc">What does a future you want from you?</p>`:'');
+ $('choices').innerHTML='<button onclick="location.reload()">Play again</button>';
+ hud();
+}
+function hud(){
+ const show=S.f.token?`<div>Years pledged <b>${S.years||0}</b><div class="bar r"><i style="width:${S.years/13*100}%"></i></div></div>`:`<div>Hope <b>${S.f.token?'—':'fragile'}</b></div>`;
+ $('hud').innerHTML=`<div>Mamma's health <b>${Math.round(S.mom)}%</b><div class="bar g"><i style="width:${S.mom}%"></i></div></div>
+ <div>Vial of chrono-essence <b>${S.f.vialTaken?Math.round(S.vial)+'%':'—'}</b><div class="bar b"><i style="width:${S.f.vialTaken?S.vial:0}%"></i></div></div>
+ <div>Lies told <b>${S.lies}</b><div class="bar r"><i style="width:${Math.min(100,S.lies*14)}%"></i></div></div>
+ ${show}`;
+}
+function render(){
+ hud();
+ document.querySelector('.cover').style.display=(S.scene==='class'&&!S.f.ritual&&!S.f.board)?'block':'none';
+ const s=sc[S.scene];
+ if(s.auto){S.scene=s.auto();return render()}
+ $('chap').textContent=s.ch; $('ctitle').textContent=s.title;
+ const im=typeof s.img==='function'?s.img():s.img;
+ $('text').innerHTML=(im?`<img class="art" src="img/${im}.jpg" alt="">`:'')+S.pend+s.text(); S.pend='';
+ const c=$('choices'); c.innerHTML='';
+ s.ch_.filter(x=>!x.if||x.if()).forEach(x=>{
+  const b=document.createElement('button'); b.innerHTML=x.t;
+  b.onclick=()=>{ if(x.do)x.do(); go(x.go) };
+  c.appendChild(b);
+ });
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function go(id){ if(id.startsWith('end_'))return ending(id); S.scene=id; render() }
+render();
+</script></body></html>
