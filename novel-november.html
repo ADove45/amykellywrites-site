@@ -25,52 +25,97 @@ a{color:#7A3520}a:hover{color:#4E2214}
 .nn-btn:hover{background:#C4912F}.nn-btn:disabled{opacity:.6;cursor:wait}
 .nn-email-only .nn-upload{display:none}
 .nn-done{display:none;background:#fff;border:1px solid #D9CBB8;border-radius:14px;padding:32px;text-align:center}
+.nn-h2{margin:0;font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:clamp(32px,4vw,44px);line-height:1.15;color:#3A2219}
+.nn-eyebrow{margin:0;font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#8E3C23}
+.nn-card{flex:1 1 240px;background:#fff;border:1px solid #D9CBB8;border-radius:16px;padding:26px 26px}
+.nn-card h3{margin:0 0 8px;font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:25px;color:#3A2219}
+.nn-card p{margin:0}
+.nn-step-num{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:999px;background:#D6A23F;color:#2B1B14;font-weight:600;font-size:20px;margin-bottom:12px}
+.nn-cta{display:inline-flex;align-items:center;min-height:56px;padding:0 32px;border-radius:999px;background:#D6A23F;color:#2B1B14;font-weight:600;font-size:19px;text-decoration:none}
+.nn-cta:hover{background:#C4912F;color:#2B1B14}
+details{background:#fff;border:1px solid #D9CBB8;border-radius:14px;padding:18px 24px}
+summary{cursor:pointer;font-weight:600;font-size:19px;color:#3A2219}
+details p{margin:12px 0 0}
 </style>
 </head>
 <body>
 <div style="font-family: 'Work Sans', system-ui, sans-serif; color: #2A201B; background: #F4EDE3; font-size: 18px; line-height: 1.6">
+
 <header style="background: #2B1B14; color: #FFFFFF">
 <nav aria-label="Main" style="max-width: 1200px; margin: 0 auto; padding: 22px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
 <a href="index.html" style="font-family: 'DM Serif Display', Georgia, serif; font-size: 26px; color: #FFFFFF; text-decoration: none">Amy Kelly <span style="font-style: italic; color: #D6A23F">Writes</span></a>
-<div style="display: flex; flex-wrap: wrap; gap: 28px; font-size: 16px; font-weight: 500">
-<a href="index.html" style="color: #EFE3D2; text-decoration: none">Home</a>
-<a href="index.html#pen-names" style="color: #EFE3D2; text-decoration: none">Books</a>
-<a href="students.html" style="color: #EFE3D2; text-decoration: none">Student Books</a>
-<a href="services.html" style="color: #EFE3D2; text-decoration: none">Services</a>
-<a href="hero-journey-workshop.html" style="color: #EFE3D2; text-decoration: none">Writing Studio</a>
-</div>
+<a href="#submit" style="color: #EFE3D2; font-size: 16px; font-weight: 600; text-decoration: none">Submit your pages →</a>
 </nav>
-<section style="max-width: 1200px; margin: 0 auto; padding: 72px 24px 88px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center">
+<section style="max-width: 1200px; margin: 0 auto; padding: 64px 24px 96px; display: flex; flex-wrap: wrap; align-items: center; gap: 56px">
+<div style="flex: 1 1 520px; display: flex; flex-direction: column; gap: 22px">
 <p style="margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #D6A23F">Novel November · Free until December 1</p>
-<h1 style="margin: 0; font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: clamp(40px, 5.5vw, 72px); line-height: 1.05">Free feedback on your work in progress</h1>
-<p style="margin: 0; max-width: 680px; font-size: 20px; color: #E9DCC9">Writing a novel this November? Send me your synopsis and first chapter, and I'll send back developmental feedback on what's working, what needs attention and where your story could go next.</p>
+<h1 style="margin: 0; font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: clamp(42px, 5.6vw, 74px); line-height: 1.05">You're writing the book. Let a developmental editor read the beginning.</h1>
+<p style="margin: 0; max-width: 620px; font-size: 21px; color: #E9DCC9">Send me your synopsis and first chapter this month and I'll give you free, honest developmental feedback, so you can head into December knowing what's working and what to fix next.</p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px; margin-top: 6px">
+<a href="#submit" class="nn-cta">Get my free feedback</a>
+<span style="font-size: 16px; color: #CBBBA6">No cost · No obligation · Your work stays yours</span>
+</div>
+</div>
+<div style="flex: 0 1 340px; min-width: 240px; margin: 0 auto">
+<img src="images/amy-kelly.jpg" alt="Portrait of developmental editor and author Amy Kelly" style="display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center top; border-radius: 170px 170px 12px 12px">
+</div>
 </section>
 </header>
 
-<main style="max-width: 760px; margin: 0 auto; padding: 72px 24px 88px; display: flex; flex-direction: column; gap: 40px">
+<section id="nn-countdown" style="background: #8E3C23; color: #FFFFFF; text-align: center; padding: 18px 24px; font-size: 18px; font-weight: 600"></section>
 
-<section style="display: flex; flex-wrap: wrap; gap: 20px">
-<div style="flex: 1 1 200px; background: #fff; border: 1px solid #D9CBB8; border-radius: 14px; padding: 22px 24px">
-<p style="margin: 0 0 6px; font-weight: 600; color: #8E3C23">What to send</p>
-<p style="margin: 0">A synopsis (1–2 pages) and your first chapter (up to 5,000 words).</p>
+<main>
+
+<section style="max-width: 1100px; margin: 0 auto; padding: 88px 24px 40px; display: flex; flex-direction: column; gap: 32px">
+<div style="text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center">
+<p class="nn-eyebrow">What you'll get</p>
+<h2 class="nn-h2">Feedback on the parts that matter most</h2>
+<p style="margin: 0; max-width: 680px; font-size: 20px; color: #5A4A40">An opening chapter and a synopsis show me the big picture: your hook, your characters and where the whole story is headed.</p>
 </div>
-<div style="flex: 1 1 200px; background: #fff; border: 1px solid #D9CBB8; border-radius: 14px; padding: 22px 24px">
-<p style="margin: 0 0 6px; font-weight: 600; color: #8E3C23">File types</p>
-<p style="margin: 0">Word (.doc or .docx) or PDF, up to 10 MB each.</p>
-</div>
-<div style="flex: 1 1 200px; background: #fff; border: 1px solid #D9CBB8; border-radius: 14px; padding: 22px 24px">
-<p style="margin: 0 0 6px; font-weight: 600; color: #8E3C23">Deadline</p>
-<p style="margin: 0">Submissions close at 11:59 p.m. Eastern on December 1, 2026.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 20px">
+<div class="nn-card"><h3>Your opening</h3><p>Does the first chapter hook a reader, set up your main character and promise the right kind of story?</p></div>
+<div class="nn-card"><h3>Your story's shape</h3><p>Using your synopsis, I'll look at structure, stakes and pacing across the whole book, not just page one.</p></div>
+<div class="nn-card"><h3>Your next steps</h3><p>Clear, specific notes on what's working and what to focus on as you keep drafting or start revising.</p></div>
 </div>
 </section>
 
+<section style="max-width: 1100px; margin: 0 auto; padding: 56px 24px 40px; display: flex; flex-direction: column; gap: 32px">
+<div style="text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center">
+<p class="nn-eyebrow">How it works</p>
+<h2 class="nn-h2">Three simple steps</h2>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 20px">
+<div class="nn-card"><span class="nn-step-num">1</span><h3>Send your pages</h3><p>A synopsis (1–2 pages) and your first chapter (up to 5,000 words), as a Word file or PDF.</p></div>
+<div class="nn-card"><span class="nn-step-num">2</span><h3>I read them myself</h3><p>Every submission is read by me, in the order it arrives. No AI.</p></div>
+<div class="nn-card"><span class="nn-step-num">3</span><h3>Get your feedback</h3><p>Your notes arrive by email, so you can get right back to writing.</p></div>
+</div>
+</section>
+
+<section style="max-width: 1100px; margin: 0 auto; padding: 56px 24px 40px">
+<div style="background: #2B1B14; color: #EFE3D2; border-radius: 22px; padding: 48px 44px; display: flex; flex-wrap: wrap; align-items: center; gap: 40px">
+<img src="images/amy-kelly-sunrise.jpg" alt="Amy Kelly outdoors in the golden light of sunrise" style="flex: 0 0 200px; width: 200px; height: 200px; object-fit: cover; object-position: 70% 30%; border-radius: 999px; margin: 0 auto">
+<div style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 14px">
+<p style="margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #D6A23F">Who's reading your pages</p>
+<h2 style="margin: 0; font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: 36px; line-height: 1.15; color: #FFFFFF">Hi, I'm Amy Kelly.</h2>
+<p style="margin: 0">I'm a developmental editor, ghostwriter and author with an MFA in Creative Writing and nearly two decades of professional writing experience. I've published independently under four pen names since 2014, led story teams as a Senior Story Director, and edit a middle-grade historical fiction series today.</p>
+<p style="margin: 0">I know what it's like to be in the middle of a draft. This is my way of cheering on everyone writing a novel this November.</p>
+<a href="about.html" style="color: #F3C977; font-weight: 600; text-decoration: none">More about me →</a>
+</div>
+</div>
+</section>
+
+<section id="submit" style="max-width: 760px; margin: 0 auto; padding: 72px 24px 40px; display: flex; flex-direction: column; gap: 28px; scroll-margin-top: 20px">
+<div style="text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center">
+<p class="nn-eyebrow">Submit your pages</p>
+<h2 class="nn-h2">Ready when you are</h2>
+<p style="margin: 0; font-size: 19px; color: #5A4A40">Word (.doc or .docx) or PDF, up to 10 MB each. Submissions close at 11:59 p.m. Eastern on December 1, 2026.</p>
+</div>
 <div id="nnClosed" style="display: none; background: #fff; border: 1px solid #D9CBB8; border-radius: 14px; padding: 32px; text-align: center">
 <h2 style="margin: 0 0 12px; font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: 32px; color: #3A2219">Submissions are closed</h2>
 <p style="margin: 0">Thank you to every writer who sent in their pages. Want help with your manuscript? <a href="services.html">See my editing services</a>, or <a href="index.html#newsletter">join my newsletter</a> to hear about the next free feedback round.</p>
 </div>
 
 <form id="nnForm" style="display: flex; flex-direction: column; gap: 24px" novalidate>
-<h2 style="margin: 0; font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: 36px; line-height: 1.15; color: #3A2219; text-align: center">Submit your pages</h2>
 
 <div class="nn-field"><label for="nn-name">Your name</label><input id="nn-name" name="name" type="text" required autocomplete="name"></div>
 <div class="nn-field"><label for="nn-email">Email address</label><p class="hint">Your feedback will be sent here.</p><input id="nn-email" name="email" type="email" required autocomplete="email"></div>
@@ -109,14 +154,37 @@ a{color:#7A3520}a:hover{color:#4E2214}
 <div id="nnDoneBody"><p style="margin: 0">Thank you for trusting me with your story. I'll send your feedback to the email address you gave me. Happy writing!</p></div>
 </div>
 
+</section>
+
+<section style="max-width: 760px; margin: 0 auto; padding: 48px 24px 96px; display: flex; flex-direction: column; gap: 16px">
+<h2 class="nn-h2" style="text-align: center; margin-bottom: 8px">Questions</h2>
+<details><summary>Is it really free?</summary><p>Yes. There's no cost and no obligation to hire me for anything afterward.</p></details>
+<details><summary>My draft is messy. Should I still send it?</summary><p>Yes. This is for works in progress. A rough first chapter is exactly what Novel November is for.</p></details>
+<details><summary>What if I'm not part of a writing challenge?</summary><p>That's fine. Any novel you're working on this November is welcome, in any genre.</p></details>
+<details><summary>Will my work be used with AI?</summary><p>No. I read and respond to your pages myself. Your work won't be put into any AI tool, and it will never be used to train AI.</p></details>
+<details><summary>What happens to my files?</summary><p>I use them only to write your feedback, and I delete them once your feedback is sent. You keep all rights to your writing.</p></details>
+</section>
+
 </main>
 
-<footer style="max-width: 1200px; margin: 0 auto; padding: 32px 24px 56px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; border-top: 1px solid #D9CBB8">
-<a href="index.html" style="display: inline-flex; align-items: center; min-height: 44px; font-weight: 600">← Back to home</a>
-<p style="margin: 0; font-size: 15px; color: #6A5A50; align-self: center">© 2026 Amy Kelly · amykellywrites.com</p>
+<footer style="background: #2B1B14">
+<div style="max-width: 1200px; margin: 0 auto; padding: 28px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 15px; color: #E9DCC9">
+<a href="index.html" style="color: #F3C977; font-weight: 600; text-decoration: none">Visit amykellywrites.com →</a>
+<span>© 2026 Amy Kelly · amykellywrites.com</span>
+</div>
 </footer>
 </div>
 
+<script>
+(function () {
+  var el = document.getElementById('nn-countdown');
+  var end = new Date('2026-12-01T23:59:59-05:00');
+  var days = Math.ceil((end - new Date()) / 86400000);
+  if (days <= 0) { el.textContent = 'Novel November submissions are now closed. Thank you, writers!'; return; }
+  el.textContent = days === 1 ? 'Last day to submit — closes tonight at 11:59 p.m. Eastern'
+    : days + ' days left to send your pages · Closes December 1';
+})();
+</script>
 <script>
 (function () {
   // Paste the Novel November Apps Script web app URL here once it's deployed.
