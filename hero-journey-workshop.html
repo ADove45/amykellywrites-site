@@ -75,6 +75,7 @@ footer a{color:#D6A23F}
 <a href="https://amykellywrites.com/students.html">Student Books</a>
 <a href="https://amykellywrites.com#services">Services</a>
 <a href="https://amykellywrites.com/about.html">About</a>
+<a href="https://amykellywrites.com/#newsletter">Newsletter</a>
 </div>
 </div>
 </nav>
@@ -99,6 +100,7 @@ footer a{color:#D6A23F}
 <input type="email" name="email" placeholder="Your email address" required>
 <button type="submit">Send me the link</button>
 </form>
+<p id="signupError" role="status" style="font-size:18px;color:#8E3C23;margin-top:12px"></p>
 <p style="font-size:15px;color:#9A8E80;margin-top:12px">No spam. Unsubscribe anytime.</p>
 </div>
 
@@ -165,8 +167,10 @@ function handleSubmit(e) {
     document.getElementById('signupBlock').style.display = 'none';
     document.getElementById('thankYou').classList.add('show');
   }).catch(function() {
-    document.getElementById('signupBlock').style.display = 'none';
-    document.getElementById('thankYou').classList.add('show');
+    btn.textContent = 'Send me the link';
+    btn.disabled = false;
+    var alertMsg = document.getElementById('signupError');
+    if (alertMsg) alertMsg.textContent = 'Something went wrong. Please check your connection and try again.';
   });
 }
 if(location.search.includes('subscribed=true')){
