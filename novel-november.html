@@ -132,7 +132,8 @@ details p{margin:14px 0 0;font-size:21px}
 <h3>Before you submit</h3>
 <ul>
 <li><strong>It's free.</strong> There's no cost and no obligation to hire me for anything afterward.</li>
-<li><strong>Your work stays yours.</strong> You keep all rights to your writing. I won't share, publish or use your work or ideas for anything other than giving you feedback, and I'll delete your files once your feedback is sent.</li>
+<li><strong>Your work stays yours.</strong> You keep all rights to your writing. I won't share, publish or copy your pages, and I'll delete your files once your feedback is sent.</li>
+<li><strong>Idea release.</strong> You understand that I am a professional author and editor who develops and publishes my own work and works with other writers. Ideas, concepts, themes, tropes, genres, plots and character types are not protected by copyright and are often shared by many writers. By submitting, you agree that I may create, edit or publish works that contain ideas or elements similar to those in your submission, whether developed before or after it, and you release me from any claim based on such similarity. This release does not cover your actual written text, which remains yours and will not be copied or published.</li>
 <li><strong>No AI.</strong> I read and respond to your pages myself. I won't put your work into any AI tool, and it will never be used to train AI.</li>
 <li><strong>It's one editor's opinion.</strong> My feedback is my honest professional view. It isn't a guarantee of publication, representation or sales.</li>
 <li><strong>Timing.</strong> I'll read submissions in the order they arrive. Feedback may take a few weeks if many writers take part.</li>
@@ -143,6 +144,7 @@ details p{margin:14px 0 0;font-size:21px}
 </div>
 
 <label class="nn-agree"><input type="checkbox" id="nn-agree" name="agree" required> <span>I've read the terms above and agree to them, including joining the newsletter.</span></label>
+<label class="nn-agree"><input type="checkbox" id="nn-release" name="release" required> <span>I understand the idea release: similar ideas happen, and I release Amy Kelly from any claim based on similarity between my submission and her work.</span></label>
 
 <p id="nnError" role="alert" style="margin: 0; color: #8E3C23; font-weight: 600; font-size: 20px"></p>
 <button type="submit" class="nn-btn" id="nnBtn">Submit my pages</button>
@@ -162,7 +164,8 @@ details p{margin:14px 0 0;font-size:21px}
 <details><summary>My draft is messy. Should I still send it?</summary><p>Yes. This is for works in progress. A rough first chapter is exactly what Novel November is for.</p></details>
 <details><summary>What if I'm not part of a writing challenge?</summary><p>That's fine. Any novel you're working on this November is welcome, in any genre.</p></details>
 <details><summary>Will my work be used with AI?</summary><p>No. I read and respond to your pages myself. Your work won't be put into any AI tool, and it will never be used to train AI.</p></details>
-<details><summary>What happens to my files?</summary><p>I use them only to write your feedback, and I delete them once your feedback is sent. You keep all rights to your writing.</p></details>
+<details><summary>What if you write something similar to my idea?</summary><p>I'm a working author, and ideas, themes and tropes are shared by writers everywhere. I may write or publish work with similar ideas, whether I came up with them before or after reading yours. What I will never do is copy or publish your actual writing. See the idea release in the terms for the details.</p></details>
+<details><summary>What happens to my files?</summary><p>I use your pages only to write your feedback, and I delete them once your feedback is sent. You keep all rights to your writing.</p></details>
 </section>
 
 </main>
@@ -239,7 +242,8 @@ details p{margin:14px 0 0;font-size:21px}
       : !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) ? 'Please enter a valid email address.'
       : !title ? 'Please enter your working title.'
       : (!emailOnly && (checkFile(form.synopsis, 'synopsis') || checkFile(form.chapter, 'first chapter')))
-      || (!form.agree.checked ? 'Please read and agree to the terms.' : '');
+      || (!form.agree.checked ? 'Please read and agree to the terms.' : '')
+      || (!form.release.checked ? 'Please check the box to accept the idea release.' : '');
     if (problem) { err.textContent = problem; return; }
 
     var label = btn.textContent;
@@ -257,7 +261,7 @@ details p{margin:14px 0 0;font-size:21px}
           method: 'POST', headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({
             name: name, email: email, title: title, genre: form.genre.value.trim(),
-            wordcount: form.wordcount.value, notes: form.notes.value.trim(), agree: true,
+            wordcount: form.wordcount.value, notes: form.notes.value.trim(), agree: true, release: true,
             synopsis: files[0], chapter: files[1]
           })
         });
